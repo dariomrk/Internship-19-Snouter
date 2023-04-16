@@ -6,12 +6,32 @@ namespace Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.RegisterApplicationServices();
 
             var app = builder.Build();
 
+            app.ConfigureMiddleware();
+
+            app.Run();
+        }
+    }
+
+    public static partial class ServiceInitializer
+    {
+        public static IServiceCollection RegisterApplicationServices(this IServiceCollection services)
+        {
+            services.AddControllers();
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+
+            return services;
+        }
+    }
+
+    public static partial class MiddlewareInitializer
+    {
+        public static WebApplication ConfigureMiddleware(this WebApplication app)
+        {
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -22,7 +42,7 @@ namespace Api
             app.UseAuthorization();
             app.MapControllers();
 
-            app.Run();
+            return app;
         }
     }
 }
