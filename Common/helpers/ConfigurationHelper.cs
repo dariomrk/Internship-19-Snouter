@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Serilog;
 
 namespace Common.Helpers
 {

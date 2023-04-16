@@ -1,3 +1,5 @@
+using Serilog;
+
 namespace Api
 {
     public class Program
@@ -6,17 +8,28 @@ namespace Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Host.ConfigureHost();
             builder.Services.RegisterApplicationServices();
 
             var app = builder.Build();
 
             app.ConfigureMiddleware();
 
-            app.Run();
+            Logger.Configure(builder.Configuration);
+            Logger.StartLogging(()=> { app.Run(); });
         }
     }
 
-    public static partial class ServiceInitializer
+    public static class HostInitializer
+    {
+        public static IHostBuilder ConfigureHost(this IHostBuilder host)
+        {
+            host.UseSerilog();
+            return host;
+        }
+    }
+
+    public static class ServiceInitializer
     {
         public static IServiceCollection RegisterApplicationServices(this IServiceCollection services)
         {
@@ -28,7 +41,7 @@ namespace Api
         }
     }
 
-    public static partial class MiddlewareInitializer
+    public static class MiddlewareInitializer
     {
         public static WebApplication ConfigureMiddleware(this WebApplication app)
         {
