@@ -1,0 +1,6 @@
+FROM postgres:15-alpine
+EXPOSE 5432
+CMD ["postgres"]
+ENV POSTGRES_USER developer
+ENV POSTGRES_PASSWORD password
+ENV POSTGRES_DB snouter-development
