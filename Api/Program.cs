@@ -16,7 +16,7 @@ namespace Api
             app.ConfigureMiddleware();
 
             Logger.Configure(builder.Configuration);
-            Logger.StartLogging(()=> { app.Run(); });
+            Logger.StartLogging(() => { app.Run(); });
         }
     }
 

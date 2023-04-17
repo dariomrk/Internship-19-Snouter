@@ -1,7 +1,6 @@
-﻿using Common.Helpers;
+﻿using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Json;
-using Serilog;
 
 namespace Api
 {
