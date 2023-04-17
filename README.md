@@ -46,6 +46,10 @@ Afterwards run:
 
 `docker run -d -p 5432:5432 --name snouter-development-database snouter-development-database`
 
+If you want to restart the container on boot run this instead:
+
+`docker run -d -p 5432:5432 --restart unless-stopped --name snouter-development-database snouter-development-database`
+
 These commands will create and run a Docker container containing a Postgres database.
 
 ### Environments
@@ -54,6 +58,6 @@ In the Package Manager Console execute:
 
 `$env:ASPNETCORE_ENVIRONMENT = "Development"`
 
-### Migrations
+### Applying existing migrations
 
-After you have set up your models and the `SnouterDbContext.cs`, open the Package Manager Console, change the Default project to `Data` and execute: `Add-Migration <migration-name>` followed by: `Update-Database`.
+Open the Package Manager Console, change the Default project to `Data` and execute: `Update-Database`.
