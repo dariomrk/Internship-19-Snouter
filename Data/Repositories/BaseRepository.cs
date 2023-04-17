@@ -1,5 +1,5 @@
 ﻿using Common.Constants;
-using Common.Enums;
+using Data.Enums;
 using Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Serilog;

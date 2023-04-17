@@ -42,6 +42,7 @@ namespace Data
 
             userEntity
                 .Property(x => x.Phone)
+                .IsRequired()
                 .HasMaxLength(10)
                 .IsFixedLength(true);
             #endregion

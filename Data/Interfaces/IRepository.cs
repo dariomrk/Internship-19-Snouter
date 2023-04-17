@@ -1,4 +1,4 @@
-﻿using Common.Enums;
+﻿using Data.Enums;
 
 namespace Data.Interfaces
 {
