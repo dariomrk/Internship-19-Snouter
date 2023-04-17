@@ -6,7 +6,7 @@ using Serilog;
 
 namespace Data.Repositories
 {
-    public class BaseRepository<TEntity, TId> : IRepository<TEntity, TId> where TEntity : class, IEntity<TId>
+    public class BaseRepository<TEntity, TId> : IRepository<TEntity, TId> where TEntity : class, IEntity<TId> where TId : struct
     {
         protected readonly SnouterDbContext _dbContext;
         protected readonly DbSet<TEntity> _dbSet;

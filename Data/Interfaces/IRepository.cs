@@ -2,7 +2,7 @@
 
 namespace Data.Interfaces
 {
-    public interface IRepository<TEntity, TId> where TEntity : class, IEntity<TId>
+    public interface IRepository<TEntity, TId> where TEntity : class, IEntity<TId> where TId : struct
     {
         IQueryable<TEntity> Query();
         Task<bool> CheckExistsAsync(TId id, CancellationToken cancellationToken);
