@@ -8,13 +8,20 @@ namespace Application.Services
 {
     public class BaseService<TEntity, TId> : ICrudService<TEntity, TId> where TEntity : class, IEntity<TId> where TId : struct
     {
-        private readonly IRepository<TEntity, TId> _repository;
+        protected readonly IRepository<TEntity, TId> _repository;
         public BaseService(IRepository<TEntity, TId> repository)
         {
             _repository = repository;
         }
 
-        public virtual async Task<TId> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public IQueryable<TEntity> Query()
+        {
+            return _repository
+                .Query()
+                .AsNoTracking();
+        }
+
+        public virtual async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             if (entity is null)
                 throw new ArgumentNullException(nameof(entity));
@@ -27,7 +34,7 @@ namespace Application.Services
             if (repositoryResult.RepositoryActionResult is not RepositoryAction.Success)
                 throw new Exception(Messages.RepositoryActionFailed);
 
-            return repositoryResult.CreatedEntityId;
+            return repositoryResult.CreatedEntity;
         }
 
         public virtual async Task DeleteAsync(TId id, CancellationToken cancellationToken = default)
