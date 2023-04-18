@@ -48,7 +48,7 @@ namespace Application.Services
                 throw new Exception(Messages.RepositoryActionFailed);
         }
 
-        public virtual async Task<TEntity?> FindAync(TId id, CancellationToken cancellationToken = default)
+        public virtual async Task<TEntity?> FindAsync(TId id, CancellationToken cancellationToken = default)
         {
             if (await _repository.CheckExistsAsync(id, cancellationToken))
                 throw new ArgumentException(string.Format(Messages.EntityDoesNotExist, typeof(TEntity), id));
