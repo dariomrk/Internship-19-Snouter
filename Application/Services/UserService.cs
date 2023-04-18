@@ -50,5 +50,20 @@ namespace Application.Services
 
             return creationResult.CreatedEntity.ToCreateUserResponse();
         }
+
+        public override Task<User?> FindAsync(int id, CancellationToken cancellationToken = default)
+        {
+            var user = _repository
+                .Query()
+                .Include(u => u.Products)
+                .Include(u => u.PreciseLocation)
+                .Include(u => u.City)
+                    .ThenInclude(c => c.County)
+                    .ThenInclude(c => c.Country)
+                .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+
+            return user;
+
+        }
     }
 }
