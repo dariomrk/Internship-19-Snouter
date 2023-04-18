@@ -42,7 +42,7 @@ namespace Application.Services
             if (await _repository.CheckExistsAsync(id, cancellationToken))
                 throw new ArgumentException(string.Format(Messages.EntityDoesNotExist, typeof(TEntity), id));
 
-            var repositoryResult = await _repository.DeleteAsync(id, cancellationToken = default);
+            var repositoryResult = await _repository.DeleteAsync(id, cancellationToken);
 
             if (repositoryResult is not RepositoryAction.Success)
                 throw new Exception(Messages.RepositoryActionFailed);
