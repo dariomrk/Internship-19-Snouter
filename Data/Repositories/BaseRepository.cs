@@ -60,7 +60,6 @@ namespace Data.Repositories
         public IQueryable<TEntity> Query()
         {
             return _dbSet
-                .AsNoTracking()
                 .AsQueryable();
         }
 
@@ -74,7 +73,7 @@ namespace Data.Repositories
             return await _dbSet.FindAsync(id, cancellationToken);
         }
 
-        public async Task<(RepositoryAction RepositoryActionResult, TId CreatedEntityId)> CreateAsync(
+        public async Task<(RepositoryAction RepositoryActionResult, TEntity CreatedEntity)> CreateAsync(
             TEntity entity,
             CancellationToken cancellationToken = default)
         {
@@ -84,7 +83,7 @@ namespace Data.Repositories
                 return await SaveChangesAsync(cancellationToken);
             });
 
-            return (repositoryActionResult, entity.Id);
+            return (repositoryActionResult, entity);
         }
 
         public Task<RepositoryAction> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)

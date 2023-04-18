@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(SnouterDbContext))]
-    [Migration("20230418093604_InitialMigration")]
+    [Migration("20230418153659_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -42,6 +42,29 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Category");
+                });
+
+            modelBuilder.Entity("Data.Models.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CountyId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountyId");
+
+                    b.ToTable("City");
                 });
 
             modelBuilder.Entity("Data.Models.Country", b =>
@@ -103,16 +126,13 @@ namespace Data.Migrations
                     b.ToTable("Currency");
                 });
 
-            modelBuilder.Entity("Data.Models.Location", b =>
+            modelBuilder.Entity("Data.Models.PreciseLocation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CountyId")
-                        .HasColumnType("integer");
 
                     b.Property<double>("Latitude")
                         .HasColumnType("double precision");
@@ -123,16 +143,9 @@ namespace Data.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("double precision");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("CountyId");
-
-                    b.ToTable("Location");
+                    b.ToTable("PreciseLocation");
                 });
 
             modelBuilder.Entity("Data.Models.Product", b =>
@@ -148,6 +161,9 @@ namespace Data.Migrations
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
+                    b.Property<int>("CityId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("CreatorId")
                         .HasColumnType("integer");
 
@@ -158,13 +174,13 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("LocationId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(48)
                         .HasColumnType("character varying(48)");
+
+                    b.Property<int?>("PreciseLocationId")
+                        .HasColumnType("integer");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("money");
@@ -198,11 +214,13 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CityId");
+
                     b.HasIndex("CreatorId");
 
                     b.HasIndex("CurrencyId");
 
-                    b.HasIndex("LocationId");
+                    b.HasIndex("PreciseLocationId");
 
                     b.HasIndex("SubCategoryId");
 
@@ -244,6 +262,9 @@ namespace Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CityId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -259,14 +280,14 @@ namespace Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<int>("LocationId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("character(10)")
                         .IsFixedLength();
+
+                    b.Property<int?>("PreciseLocationId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -275,9 +296,22 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LocationId");
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("PreciseLocationId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Data.Models.City", b =>
+                {
+                    b.HasOne("Data.Models.County", "County")
+                        .WithMany()
+                        .HasForeignKey("CountyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("County");
                 });
 
             modelBuilder.Entity("Data.Models.County", b =>
@@ -291,19 +325,14 @@ namespace Data.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("Data.Models.Location", b =>
+            modelBuilder.Entity("Data.Models.Product", b =>
                 {
-                    b.HasOne("Data.Models.County", "County")
-                        .WithMany("Locations")
-                        .HasForeignKey("CountyId")
+                    b.HasOne("Data.Models.City", "City")
+                        .WithMany("Products")
+                        .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("County");
-                });
-
-            modelBuilder.Entity("Data.Models.Product", b =>
-                {
                     b.HasOne("Data.Models.User", "Creator")
                         .WithMany("Products")
                         .HasForeignKey("CreatorId")
@@ -316,11 +345,9 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Models.Location", "Location")
-                        .WithMany("Products")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Data.Models.PreciseLocation", "PreciseLocation")
+                        .WithMany("Product")
+                        .HasForeignKey("PreciseLocationId");
 
                     b.HasOne("Data.Models.SubCategory", "SubCategory")
                         .WithMany()
@@ -328,11 +355,13 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("City");
+
                     b.Navigation("Creator");
 
                     b.Navigation("Currency");
 
-                    b.Navigation("Location");
+                    b.Navigation("PreciseLocation");
 
                     b.Navigation("SubCategory");
                 });
@@ -350,13 +379,19 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.User", b =>
                 {
-                    b.HasOne("Data.Models.Location", "Location")
+                    b.HasOne("Data.Models.City", "City")
                         .WithMany("Users")
-                        .HasForeignKey("LocationId")
+                        .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Location");
+                    b.HasOne("Data.Models.PreciseLocation", "PreciseLocation")
+                        .WithMany("User")
+                        .HasForeignKey("PreciseLocationId");
+
+                    b.Navigation("City");
+
+                    b.Navigation("PreciseLocation");
                 });
 
             modelBuilder.Entity("Data.Models.Category", b =>
@@ -364,14 +399,16 @@ namespace Data.Migrations
                     b.Navigation("SubCategories");
                 });
 
+            modelBuilder.Entity("Data.Models.City", b =>
+                {
+                    b.Navigation("Products");
+
+                    b.Navigation("Users");
+                });
+
             modelBuilder.Entity("Data.Models.Country", b =>
                 {
                     b.Navigation("Counties");
-                });
-
-            modelBuilder.Entity("Data.Models.County", b =>
-                {
-                    b.Navigation("Locations");
                 });
 
             modelBuilder.Entity("Data.Models.Currency", b =>
@@ -379,11 +416,11 @@ namespace Data.Migrations
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("Data.Models.Location", b =>
+            modelBuilder.Entity("Data.Models.PreciseLocation", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("Product");
 
-                    b.Navigation("Users");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Data.Models.User", b =>

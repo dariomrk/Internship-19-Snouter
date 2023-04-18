@@ -53,6 +53,21 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PreciseLocation",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Latitude = table.Column<double>(type: "double precision", nullable: false),
+                    Longitude = table.Column<double>(type: "double precision", nullable: false),
+                    LocationType = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PreciseLocation", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SubCategory",
                 columns: table => new
                 {
@@ -94,22 +109,19 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Location",
+                name: "City",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
-                    Latitude = table.Column<double>(type: "double precision", nullable: false),
-                    Longitude = table.Column<double>(type: "double precision", nullable: false),
-                    LocationType = table.Column<int>(type: "integer", nullable: false),
                     CountyId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Location", x => x.Id);
+                    table.PrimaryKey("PK_City", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Location_County_CountyId",
+                        name: "FK_City_County_CountyId",
                         column: x => x.CountyId,
                         principalTable: "County",
                         principalColumn: "Id",
@@ -127,17 +139,23 @@ namespace Data.Migrations
                     Username = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Phone = table.Column<string>(type: "character(10)", fixedLength: true, maxLength: 10, nullable: false),
-                    LocationId = table.Column<int>(type: "integer", nullable: false)
+                    CityId = table.Column<int>(type: "integer", nullable: false),
+                    PreciseLocationId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Location_LocationId",
-                        column: x => x.LocationId,
-                        principalTable: "Location",
+                        name: "FK_Users_City_CityId",
+                        column: x => x.CityId,
+                        principalTable: "City",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_PreciseLocation_PreciseLocationId",
+                        column: x => x.PreciseLocationId,
+                        principalTable: "PreciseLocation",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -151,7 +169,8 @@ namespace Data.Migrations
                     Description = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<decimal>(type: "money", nullable: false),
                     CurrencyId = table.Column<int>(type: "integer", nullable: false),
-                    LocationId = table.Column<int>(type: "integer", nullable: false),
+                    CityId = table.Column<int>(type: "integer", nullable: false),
+                    PreciseLocationId = table.Column<int>(type: "integer", nullable: true),
                     State = table.Column<int>(type: "integer", nullable: false, defaultValue: 4),
                     Availability = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
                     SubCategoryId = table.Column<int>(type: "integer", nullable: false),
@@ -164,17 +183,22 @@ namespace Data.Migrations
                 {
                     table.PrimaryKey("PK_Product", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Product_City_CityId",
+                        column: x => x.CityId,
+                        principalTable: "City",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Product_Currency_CurrencyId",
                         column: x => x.CurrencyId,
                         principalTable: "Currency",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Product_Location_LocationId",
-                        column: x => x.LocationId,
-                        principalTable: "Location",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Product_PreciseLocation_PreciseLocationId",
+                        column: x => x.PreciseLocationId,
+                        principalTable: "PreciseLocation",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Product_SubCategory_SubCategoryId",
                         column: x => x.SubCategoryId,
@@ -190,14 +214,19 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_City_CountyId",
+                table: "City",
+                column: "CountyId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_County_CountryId",
                 table: "County",
                 column: "CountryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Location_CountyId",
-                table: "Location",
-                column: "CountyId");
+                name: "IX_Product_CityId",
+                table: "Product",
+                column: "CityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Product_CreatorId",
@@ -210,9 +239,9 @@ namespace Data.Migrations
                 column: "CurrencyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Product_LocationId",
+                name: "IX_Product_PreciseLocationId",
                 table: "Product",
-                column: "LocationId");
+                column: "PreciseLocationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Product_SubCategoryId",
@@ -225,9 +254,14 @@ namespace Data.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_LocationId",
+                name: "IX_Users_CityId",
                 table: "Users",
-                column: "LocationId");
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_PreciseLocationId",
+                table: "Users",
+                column: "PreciseLocationId");
         }
 
         /// <inheritdoc />
@@ -249,7 +283,10 @@ namespace Data.Migrations
                 name: "Category");
 
             migrationBuilder.DropTable(
-                name: "Location");
+                name: "City");
+
+            migrationBuilder.DropTable(
+                name: "PreciseLocation");
 
             migrationBuilder.DropTable(
                 name: "County");

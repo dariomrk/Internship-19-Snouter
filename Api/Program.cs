@@ -47,19 +47,20 @@ namespace Api
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
                 });
             #endregion
 
             #region Service registration
-            services.AddScoped<ICrudService<Category, int>, CategoryService>();
-            services.AddScoped<ICrudService<City, int>, CityService>();
-            services.AddScoped<ICrudService<Country, int>, CountryService>();
-            services.AddScoped<ICrudService<County, int>, CountyService>();
-            services.AddScoped<ICrudService<Currency, int>, CurrencyService>();
-            services.AddScoped<ICrudService<PreciseLocation, int>, PreciseLocationService>();
-            services.AddScoped<ICrudService<Product, int>, ProductService>();
-            services.AddScoped<ICrudService<SubCategory, int>, SubCategoryService>();
-            services.AddScoped<ICrudService<User, int>, UserService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ICityService, CityService>();
+            services.AddScoped<ICountryService, CountryService>();
+            services.AddScoped<ICountyService, CountyService>();
+            services.AddScoped<ICurrencyService, CurrencyService>();
+            services.AddScoped<IPreciseLocationService, PreciseLocationService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ISubCategoryservice, SubCategoryService>();
+            services.AddScoped<IUserService, UserService>();
             #endregion
 
             #region Repository registration

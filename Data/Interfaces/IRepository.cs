@@ -7,7 +7,7 @@ namespace Data.Interfaces
         IQueryable<TEntity> Query();
         Task<bool> CheckExistsAsync(TId id, CancellationToken cancellationToken);
         Task<TEntity?> FindAsync(TId id, CancellationToken cancellationToken);
-        Task<(RepositoryAction RepositoryActionResult, TId CreatedEntityId)> CreateAsync(TEntity entity, CancellationToken cancellationToken);
+        Task<(RepositoryAction RepositoryActionResult, TEntity CreatedEntity)> CreateAsync(TEntity entity, CancellationToken cancellationToken);
         Task<RepositoryAction> UpdateAsync(TEntity entity, CancellationToken cancellationToken);
         Task<RepositoryAction> DeleteAsync(TId id, CancellationToken cancellationToken);
     }
