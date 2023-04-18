@@ -17,10 +17,11 @@ namespace Data
 
             modelBuilder
                 .ConfigureCategory()
+                .ConfigureCity()
                 .ConfigureCountry()
                 .ConfigureCounty()
                 .ConfigureCurrency()
-                .ConfigureLocation()
+                .ConfigurePreciseLocation()
                 .ConfigureProduct()
                 .ConfigureSubCategory()
                 .ConfigureUser();

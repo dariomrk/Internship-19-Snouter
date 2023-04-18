@@ -17,6 +17,17 @@ namespace Data
 
             return modelBuilder;
         }
+        internal static ModelBuilder ConfigureCity(this ModelBuilder modelBuilder)
+        {
+            var builder = modelBuilder.Entity<City>();
+
+            builder
+                .Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(64);
+
+            return modelBuilder;
+        }
         internal static ModelBuilder ConfigureCountry(this ModelBuilder modelBuilder)
         {
             var builder = modelBuilder.Entity<Country>();
@@ -50,9 +61,9 @@ namespace Data
 
             return modelBuilder;
         }
-        internal static ModelBuilder ConfigureLocation(this ModelBuilder modelBuilder)
+        internal static ModelBuilder ConfigurePreciseLocation(this ModelBuilder modelBuilder)
         {
-            var builder = modelBuilder.Entity<Location>();
+            var builder = modelBuilder.Entity<PreciseLocation>();
 
             builder
                 .Property(x => x.Name)

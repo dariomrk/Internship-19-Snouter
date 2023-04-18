@@ -25,7 +25,8 @@ namespace Data.Models
         public string Description { get; set; } = null!;
         public decimal Price { get; set; }
         public Currency Currency { get; set; } = null!;
-        public Location Location { get; set; } = null!;
+        public City City { get; set; } = null!;
+        public PreciseLocation? PreciseLocation { get; set; }
         public ProductState State { get; set; }
         public ProductAvailability Availability { get; set; }
         public SubCategory SubCategory { get; set; } = null!;

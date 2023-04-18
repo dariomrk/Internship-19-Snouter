@@ -7,7 +7,8 @@
         public string Username { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Phone { get; set; } = null!;
-        public Location Location { get; set; } = null!;
+        public City City { get; set; } = null!;
+        public PreciseLocation? PreciseLocation { get; set; } = null!;
         public ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }

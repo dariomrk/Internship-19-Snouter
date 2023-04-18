@@ -1,6 +1,6 @@
 ﻿namespace Api
 {
-    public static class Endpoints
+    public static class Routes
     {
         private const string ApiBase = "api";
         private const string IntIdParam = "{id:int}";

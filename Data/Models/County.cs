@@ -4,6 +4,5 @@
     {
         public string Name { get; set; } = null!;
         public Country Country { get; set; } = null!;
-        public ICollection<Location> Locations { get; set; } = new List<Location>();
     }
 }

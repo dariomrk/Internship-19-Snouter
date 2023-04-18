@@ -47,10 +47,11 @@ namespace Api
 
             #region Service registration
             services.AddScoped<ICrudService<Category, int>, CategoryService>();
+            services.AddScoped<ICrudService<City, int>, CityService>();
             services.AddScoped<ICrudService<Country, int>, CountryService>();
             services.AddScoped<ICrudService<County, int>, CountyService>();
             services.AddScoped<ICrudService<Currency, int>, CurrencyService>();
-            services.AddScoped<ICrudService<Location, int>, LocationService>();
+            services.AddScoped<ICrudService<PreciseLocation, int>, PreciseLocationService>();
             services.AddScoped<ICrudService<Product, int>, ProductService>();
             services.AddScoped<ICrudService<SubCategory, int>, SubCategoryService>();
             services.AddScoped<ICrudService<User, int>, UserService>();
@@ -58,10 +59,11 @@ namespace Api
 
             #region Repository registration
             services.AddScoped<IRepository<Category, int>, BaseRepository<Category, int>>();
+            services.AddScoped<IRepository<City, int>, BaseRepository<City, int>>();
             services.AddScoped<IRepository<Country, int>, BaseRepository<Country, int>>();
             services.AddScoped<IRepository<County, int>, BaseRepository<County, int>>();
             services.AddScoped<IRepository<Currency, int>, BaseRepository<Currency, int>>();
-            services.AddScoped<IRepository<Location, int>, BaseRepository<Location, int>>();
+            services.AddScoped<IRepository<PreciseLocation, int>, BaseRepository<PreciseLocation, int>>();
             services.AddScoped<IRepository<Product, int>, BaseRepository<Product, int>>();
             services.AddScoped<IRepository<SubCategory, int>, BaseRepository<SubCategory, int>>();
             services.AddScoped<IRepository<User, int>, BaseRepository<User, int>>();
