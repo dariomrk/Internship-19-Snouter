@@ -16,7 +16,7 @@ namespace Api.Controllers
         }
 
         [HttpPost(Routes.User.Create)]
-        public async Task<ActionResult<UserResponse>> Create([FromBody] CreateUserRequest request, CancellationToken cancellationToken)
+        public async Task<ActionResult<CreateUserResponse>> Create([FromBody] CreateUserRequest request, CancellationToken cancellationToken)
         {
             var result = await _userService.CreateAsync(request, cancellationToken);
 

@@ -3,7 +3,7 @@ using Data.Models;
 
 namespace Contracts.Responses
 {
-    public class UserResponse
+    public class CreateUserResponse
     {
         public string FirstName { get; init; }
         public string LastName { get; init; }
@@ -19,9 +19,9 @@ namespace Contracts.Responses
 
     public static partial class ContractMappings
     {
-        public static UserResponse ToDto(this User model)
+        public static CreateUserResponse ToDto(this User model)
         {
-            return new UserResponse
+            return new CreateUserResponse
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,

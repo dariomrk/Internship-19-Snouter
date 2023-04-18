@@ -19,7 +19,7 @@ namespace Application.Services
             _cityRepository = cityRepository;
         }
 
-        public async Task<UserResponse> CreateAsync(CreateUserRequest newUserDetails, CancellationToken cancellationToken = default)
+        public async Task<CreateUserResponse> CreateAsync(CreateUserRequest newUserDetails, CancellationToken cancellationToken = default)
         {
             var mapped = newUserDetails.ToModel();
 
