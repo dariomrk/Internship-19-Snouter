@@ -66,11 +66,6 @@ namespace Data
             var builder = modelBuilder.Entity<PreciseLocation>();
 
             builder
-                .Property(x => x.Name)
-                .IsRequired()
-                .HasMaxLength(64);
-
-            builder
                 .Property(x => x.Latitude)
                 .IsRequired();
 

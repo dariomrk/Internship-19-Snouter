@@ -16,6 +16,16 @@
             public const string Update = $"{ControllerBase}/{IntIdParam}";
             public const string Delete = $"{ControllerBase}/{IntIdParam}";
         }
+        public static class City
+        {
+            private const string ControllerBase = $"{ApiBase}/cities";
+
+            public const string Create = $"{ControllerBase}";
+            public const string GetAll = $"{ControllerBase}";
+            public const string Find = $"{ControllerBase}/{IntIdParam}";
+            public const string Update = $"{ControllerBase}/{IntIdParam}";
+            public const string Delete = $"{ControllerBase}/{IntIdParam}";
+        }
         public static class Country
         {
             private const string ControllerBase = $"{ApiBase}/countries";
@@ -46,7 +56,7 @@
             public const string Update = $"{ControllerBase}/{IntIdParam}";
             public const string Delete = $"{ControllerBase}/{IntIdParam}";
         }
-        public static class Location
+        public static class PreciseLocation
         {
             private const string ControllerBase = $"{ApiBase}/locations";
 

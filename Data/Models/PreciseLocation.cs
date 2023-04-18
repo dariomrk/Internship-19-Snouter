@@ -8,7 +8,6 @@
 
     public class PreciseLocation : BaseEntity<int>
     {
-        public string Name { get; set; } = null!;
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public LocationType LocationType { get; set; }
