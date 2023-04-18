@@ -11,17 +11,12 @@ namespace Application.Services
     public class UserService : BaseService<User, int>, IUserService
     {
         private readonly IRepository<City, int> _cityRepository;
-        private readonly IRepository<County, int> _countyRepository;
-        private readonly IRepository<Country, int> _countryRepository;
         public UserService(
-            IRepository<User, int> repository,
-            IRepository<City, int> cityRepository,
-            IRepository<County, int> countyRepository,
-            IRepository<Country, int> countryRepository) : base(repository)
+            IRepository<User, int> userRepository,
+            IRepository<City, int> cityRepository
+            ) : base(userRepository)
         {
             _cityRepository = cityRepository;
-            _countyRepository = countyRepository;
-            _countryRepository = countryRepository;
         }
 
         public async Task<UserResponse> CreateAsync(CreateUserRequest newUserDetails, CancellationToken cancellationToken = default)
