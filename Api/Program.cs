@@ -7,6 +7,7 @@ using Data.Models;
 using Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using System.Text.Json.Serialization;
 
 namespace Api
 {
@@ -42,7 +43,11 @@ namespace Api
         public static IServiceCollection RegisterApplicationServices(this IServiceCollection services)
         {
             #region Controller registration
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
             #endregion
 
             #region Service registration
