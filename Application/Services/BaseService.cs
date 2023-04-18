@@ -3,7 +3,6 @@ using Common.Constants;
 using Data.Enums;
 using Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
 
 namespace Application.Services
 {
@@ -12,7 +11,6 @@ namespace Application.Services
         private readonly IRepository<TEntity, TId> _repository;
         public BaseService(IRepository<TEntity, TId> repository)
         {
-            Log.Verbose(Messages.CreatedInstanceOf + nameof(IRepository<TEntity, TId>));
             _repository = repository;
         }
 
