@@ -24,5 +24,16 @@ namespace Api.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet(Routes.User.Find)]
+        public async Task<ActionResult<UserResponse>> FindAsync(int id)
+        {
+            var result = await _userService.FindAsync(id);
+
+            if (result is null)
+                return NotFound();
+
+            return Ok(result.ToUserResponse());
+        }
     }
 }

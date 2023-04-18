@@ -50,9 +50,6 @@ namespace Application.Services
 
         public virtual async Task<TEntity?> FindAsync(TId id, CancellationToken cancellationToken = default)
         {
-            if (await _repository.CheckExistsAsync(id, cancellationToken))
-                throw new ArgumentException(string.Format(Messages.EntityDoesNotExist, typeof(TEntity), id));
-
             var repositoryResult = await _repository.FindAsync(id, cancellationToken);
 
             return repositoryResult;

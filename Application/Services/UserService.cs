@@ -48,7 +48,7 @@ namespace Application.Services
             if (creationResult.RepositoryActionResult is not Data.Enums.RepositoryAction.Success)
                 throw new Exception(Messages.RepositoryActionFailed);
 
-            return creationResult.CreatedEntity.ToDto();
+            return creationResult.CreatedEntity.ToCreateUserResponse();
         }
     }
 }

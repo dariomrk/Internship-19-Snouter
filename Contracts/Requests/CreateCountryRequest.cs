@@ -4,9 +4,9 @@ namespace Contracts.Requests
 {
     public class CreateCountryRequest
     {
-        public class County
+        public class CreateCountryRequestCounty
         {
-            public class City
+            public class CreateCountryRequestCity
             {
                 public string Name { get; set; }
             }
@@ -28,21 +28,23 @@ namespace Contracts.Requests
                     .Trim()
                     .ToLower()
                     .Normalize(),
-                Counties = dto.Counties.Select(county => new County
-                {
-                    Name = county.Name
+                Counties = dto.Counties
+                    .Select(county => new County
+                    {
+                        Name = county.Name
                     .Trim()
                     .ToLower()
                     .Normalize(),
-                    Cities = county.Cities.Select(city => new City
-                    {
-                        Name = city.Name
+                        Cities = county.Cities
+                        .Select(city => new City
+                        {
+                            Name = city.Name
                         .Trim()
                         .ToLower()
                         .Normalize(),
-                    })
+                        })
                     .ToList()
-                })
+                    })
                 .ToList()
             };
         }

@@ -10,7 +10,7 @@ namespace Contracts.Responses
 
     public static partial class ContractMappings
     {
-        public static CreateCountryResponse ToDto(this Country model)
+        public static CreateCountryResponse ToCreateCountryResponse(this Country model)
         {
             return new CreateCountryResponse
             {
