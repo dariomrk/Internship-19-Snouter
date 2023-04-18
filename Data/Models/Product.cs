@@ -8,6 +8,7 @@ namespace Data.Models
         Used,
         Damaged,
         NonFunctional,
+        Unknown,
     }
 
     public enum ProductAvailability
@@ -30,8 +31,8 @@ namespace Data.Models
         public SubCategory SubCategory { get; set; } = null!;
         public JsonDocument Properties { get; set; } = null!;
         public User Creator { get; set; } = null!;
-        public DateTime CreatedAt { get; set; }
+        public DateTime PublishedAt { get; set; }
         public DateTime RenewedAt { get; set; }
-        public bool HasExpired { get; set; }
+        public bool HasExpired => RenewedAt.AddDays(30) < DateTime.UtcNow;
     }
 }
