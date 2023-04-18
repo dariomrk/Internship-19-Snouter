@@ -1,5 +1,4 @@
 ﻿using Common.Helpers;
-using Laraue.EfCoreTriggers.PostgreSql.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +16,6 @@ namespace Data
 
             var options = new DbContextOptionsBuilder<SnouterDbContext>()
                 .UseNpgsql(connectionString)
-                .UsePostgreSqlTriggers()
                 .Options;
 
             return new SnouterDbContext(options);

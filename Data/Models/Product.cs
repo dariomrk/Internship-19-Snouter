@@ -18,7 +18,7 @@ namespace Data.Models
         Sold,
     }
 
-    public class Product : BaseEntity<int>
+    public class Product : BaseEntity<int>, IDisposable
     {
         public string Name { get; set; } = null!;
         public string Slug { get; set; } = null!;
@@ -34,5 +34,7 @@ namespace Data.Models
         public DateTime PublishedAt { get; set; }
         public DateTime RenewedAt { get; set; }
         public bool HasExpired => RenewedAt.AddDays(30) < DateTime.UtcNow;
+
+        public void Dispose() => Properties?.Dispose();
     }
 }
