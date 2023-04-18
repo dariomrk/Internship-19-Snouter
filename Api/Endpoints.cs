@@ -11,7 +11,8 @@
 
             public const string Create = $"{ControllerBase}";
             public const string GetAll = $"{ControllerBase}";
-            public const string GetProductsFromCategory = $"{ControllerBase}/{IntIdParam}/products";
+            public const string Find = $"{ControllerBase}/{IntIdParam}";
+            public const string GetProductsFromCategory = $"{Find}/products";
             public const string Update = $"{ControllerBase}/{IntIdParam}";
             public const string Delete = $"{ControllerBase}/{IntIdParam}";
         }
@@ -21,6 +22,7 @@
 
             public const string Create = $"{ControllerBase}";
             public const string GetAll = $"{ControllerBase}";
+            public const string Find = $"{ControllerBase}/{IntIdParam}";
             public const string Update = $"{ControllerBase}/{IntIdParam}";
             public const string Delete = $"{ControllerBase}/{IntIdParam}";
         }
@@ -30,6 +32,7 @@
 
             public const string Create = $"{ControllerBase}";
             public const string GetAll = $"{ControllerBase}";
+            public const string Find = $"{ControllerBase}/{IntIdParam}";
             public const string Update = $"{ControllerBase}/{IntIdParam}";
             public const string Delete = $"{ControllerBase}/{IntIdParam}";
         }
@@ -39,6 +42,7 @@
 
             public const string Create = $"{ControllerBase}";
             public const string GetAll = $"{ControllerBase}";
+            public const string Find = $"{ControllerBase}/{IntIdParam}";
             public const string Update = $"{ControllerBase}/{IntIdParam}";
             public const string Delete = $"{ControllerBase}/{IntIdParam}";
         }
@@ -48,6 +52,7 @@
 
             public const string Create = $"{ControllerBase}";
             public const string GetAll = $"{ControllerBase}";
+            public const string Find = $"{ControllerBase}/{IntIdParam}";
             public const string Update = $"{ControllerBase}/{IntIdParam}";
             public const string Delete = $"{ControllerBase}/{IntIdParam}";
         }
@@ -57,6 +62,7 @@
 
             public const string Create = $"{ControllerBase}";
             public const string GetAll = $"{ControllerBase}";
+            public const string Find = $"{ControllerBase}/{IntIdParam}";
             public const string Update = $"{ControllerBase}/{IntIdParam}";
             public const string Delete = $"{ControllerBase}/{IntIdParam}";
         }
@@ -66,7 +72,8 @@
 
             public const string Create = $"{ControllerBase}";
             public const string GetAll = $"{ControllerBase}";
-            public const string GetProductsFromSubCategory = $"{ControllerBase}/{IntIdParam}/products";
+            public const string Find = $"{ControllerBase}/{IntIdParam}";
+            public const string GetProductsFromSubCategory = $"{Find}/products";
             public const string Update = $"{ControllerBase}/{IntIdParam}";
             public const string Delete = $"{ControllerBase}/{IntIdParam}";
         }
@@ -76,6 +83,7 @@
 
             public const string Create = $"{ControllerBase}";
             public const string GetAll = $"{ControllerBase}";
+            public const string Find = $"{ControllerBase}/{IntIdParam}";
             public const string Update = $"{ControllerBase}/{IntIdParam}";
             public const string Delete = $"{ControllerBase}/{IntIdParam}";
         }
