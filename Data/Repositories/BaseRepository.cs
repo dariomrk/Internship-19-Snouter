@@ -100,7 +100,7 @@ namespace Data.Repositories
             return TryRepositoryActionAsync(async () =>
             {
                 var toRemove = await FindAsync(id, cancellationToken)
-                    ?? throw new ArgumentException($"{nameof(TEntity)} with Id:{id} does not exist.");
+                    ?? throw new ArgumentException(string.Format(Messages.EntityDoesNotExist, typeof(TEntity), id));
                 _dbSet.Remove(toRemove);
                 return await SaveChangesAsync(cancellationToken);
             });
