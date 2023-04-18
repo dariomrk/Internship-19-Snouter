@@ -1,4 +1,6 @@
-﻿namespace Application.Interfaces
+﻿using Data.Models;
+
+namespace Application.Interfaces
 {
-    public interface ICountyService { }
+    public interface ICountyService : IService<County, int> { }
 }

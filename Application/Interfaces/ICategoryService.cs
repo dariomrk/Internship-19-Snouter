@@ -1,4 +1,6 @@
-﻿namespace Application.Interfaces
+﻿using Data.Models;
+
+namespace Application.Interfaces
 {
-    public interface ICategoryService { }
+    public interface ICategoryService : IService<Category, int> { }
 }

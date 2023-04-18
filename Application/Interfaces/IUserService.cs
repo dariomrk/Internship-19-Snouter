@@ -2,5 +2,5 @@
 
 namespace Application.Interfaces
 {
-    public interface IUserService : ICrudService<User, int> { }
+    public interface IUserService : IService<User, int> { }
 }

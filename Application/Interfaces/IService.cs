@@ -1,6 +1,6 @@
 ﻿namespace Application.Interfaces
 {
-    public interface ICrudService<TEntity, TId> where TEntity : class where TId : struct
+    public interface IService<TEntity, TId> where TEntity : class where TId : struct
     {
         IQueryable<TEntity> Query();
         Task<ICollection<TEntity>> GetAll(CancellationToken cancellationToken = default);
