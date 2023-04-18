@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
-    public class BaseService<TEntity, TId> : ICrudService<TEntity, TId> where TEntity : class, IEntity<TId> where TId : struct
+    public class BaseService<TEntity, TId> : IService<TEntity, TId> where TEntity : class, IEntity<TId> where TId : struct
     {
         protected readonly IRepository<TEntity, TId> _repository;
         public BaseService(IRepository<TEntity, TId> repository)
@@ -40,7 +40,7 @@ namespace Application.Services
         public virtual async Task DeleteAsync(TId id, CancellationToken cancellationToken = default)
         {
             if (await _repository.CheckExistsAsync(id, cancellationToken))
-                throw new ArgumentException(Messages.EntityDoesNotExist);
+                throw new ArgumentException(string.Format(Messages.EntityDoesNotExist, typeof(TEntity), id));
 
             var repositoryResult = await _repository.DeleteAsync(id, cancellationToken = default);
 
@@ -51,7 +51,7 @@ namespace Application.Services
         public virtual async Task<TEntity?> FindAync(TId id, CancellationToken cancellationToken = default)
         {
             if (await _repository.CheckExistsAsync(id, cancellationToken))
-                throw new ArgumentException(Messages.EntityDoesNotExist);
+                throw new ArgumentException(string.Format(Messages.EntityDoesNotExist, typeof(TEntity), id));
 
             var repositoryResult = await _repository.FindAsync(id, cancellationToken);
 
@@ -71,7 +71,7 @@ namespace Application.Services
                 throw new ArgumentNullException(nameof(entity));
 
             if (await _repository.CheckExistsAsync(entity.Id, cancellationToken))
-                throw new ArgumentException(Messages.EntityDoesNotExist);
+                throw new ArgumentException(string.Format(Messages.EntityDoesNotExist, typeof(TEntity), entity.Id));
 
             var repositoryResult = await _repository.UpdateAsync(entity, cancellationToken);
 
