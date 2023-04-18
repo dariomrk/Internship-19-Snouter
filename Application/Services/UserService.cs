@@ -11,6 +11,7 @@ namespace Application.Services
     public class UserService : BaseService<User, int>, IUserService
     {
         private readonly IRepository<City, int> _cityRepository;
+
         public UserService(
             IRepository<User, int> userRepository,
             IRepository<City, int> cityRepository
@@ -35,7 +36,7 @@ namespace Application.Services
 
             var city = await _cityRepository
                 .Query()
-                .FirstOrDefaultAsync(c => newUserDetails.CityName.Contains(c.Name), cancellationToken);
+                .FirstOrDefaultAsync(c => mapped.City.Name.Contains(c.Name), cancellationToken);
 
             if (city is null)
                 throw new InvalidOperationException(Messages.CityNotDefined);
