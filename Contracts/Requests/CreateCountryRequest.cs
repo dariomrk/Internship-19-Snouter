@@ -4,18 +4,8 @@ namespace Contracts.Requests
 {
     public class CreateCountryRequest
     {
-        public class CreateCountryRequestCounty
-        {
-            public class CreateCountryRequestCity
-            {
-                public string Name { get; set; }
-            }
-
-            public string Name { get; set; }
-            public ICollection<City> Cities { get; set; } = new List<City>();
-        }
         public string Name { get; set; }
-        public ICollection<County> Counties { get; set; } = new List<County>();
+        public ICollection<CreateCountyRequest> Counties { get; set; } = new List<CreateCountyRequest>();
     }
 
     public static partial class ContractMappings
