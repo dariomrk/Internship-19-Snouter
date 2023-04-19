@@ -1,3 +1,4 @@
+using Api.Middleware;
 using Application.Interfaces;
 using Application.Services;
 using Common.Helpers;
@@ -99,6 +100,7 @@ namespace Api
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();

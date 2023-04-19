@@ -45,7 +45,7 @@ namespace Api.Middleware
             {
                 StatusCode = statusCode,
                 Message = exception.Message,
-            });
+            }, cancellationToken);
 
         }
     }

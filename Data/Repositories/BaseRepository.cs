@@ -65,7 +65,9 @@ namespace Data.Repositories
 
         public async Task<bool> CheckExistsAsync(TId id, CancellationToken cancellationToken = default)
         {
-            return await _dbSet.FindAsync(id, cancellationToken) is not null;
+            var entity = await _dbSet.FindAsync(id, cancellationToken);
+
+            return entity is not null;
         }
 
         public async Task<TEntity?> FindAsync(TId id, CancellationToken cancellationToken = default)

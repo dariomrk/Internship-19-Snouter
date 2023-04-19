@@ -8,6 +8,7 @@
         public string Email { get; set; } = null!;
         public string Phone { get; set; } = null!;
         public City City { get; set; } = null!;
+        public int CityId { get; set; }
         public PreciseLocation? PreciseLocation { get; set; } = null!;
         public ICollection<Product> Products { get; set; } = new List<Product>();
     }

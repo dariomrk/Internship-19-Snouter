@@ -39,34 +39,45 @@ namespace Application.Services
                     cancellationToken);
 
             if (isInformationInUse)
-                throw new InvalidOperationException(Messages.IdentityInformationInUse); // TODO use custom exception -> catch in middleware
+                throw new ArgumentException(Messages.IdentityInformationInUse);
 
             try
             {
                 var country = await _countryRepository
                     .Query()
                     .AsNoTracking()
-                    .FirstAsync(c => c.Name == mapped.City.County.Country.Name);
+                    .FirstAsync(c => c.Name.ToLower() == newUserDetails.CountryName
+                        .Trim()
+                        .ToLower()
+                        .Normalize());
 
                 var county = await _countyRepository
                     .Query()
                     .AsNoTracking()
-                    .FirstAsync(c => c.Name == mapped.City.County.Name);
+                    .FirstAsync(c => c.Name.ToLower() == newUserDetails.CountyName
+                        .Trim()
+                        .ToLower()
+                        .Normalize());
 
                 var city = await _cityRepository
                     .Query()
                     .AsNoTracking()
-                    .FirstAsync(c => c.Name == mapped.City.Name);
+                    .FirstAsync(c => c.Name.ToLower() == newUserDetails.CityName
+                        .Trim()
+                        .ToLower()
+                        .Normalize());
+
+                mapped.CityId = city.Id;
             }
             catch (Exception)
             {
-                throw new InvalidOperationException(Messages.CityNotDefined);  // TODO use custom exception -> catch in middleware
+                throw new ArgumentException(Messages.CityNotDefined);
             }
 
             var creationResult = await _repository.CreateAsync(mapped, cancellationToken);
 
-            if (creationResult.RepositoryActionResult is not Data.Enums.RepositoryAction.Success)
-                throw new Exception(Messages.RepositoryActionFailed);  // TODO use custom exception -> catch in middleware
+            if (creationResult.RepositoryActionResult is not RepositoryAction.Success)
+                throw new Exception(Messages.RepositoryActionFailed);
 
             var createdUser = await _repository
                 .Query()
@@ -114,7 +125,7 @@ namespace Application.Services
             var currentUser = await _repository.FindAsync(id, cancellationToken);
 
             if (currentUser is null)
-                throw new InvalidOperationException();
+                throw new ArgumentException();
 
             await _repository.BeginTransactionAsync(cancellationToken);
 
@@ -131,7 +142,7 @@ namespace Application.Services
                         cancellationToken);
 
                 if (informationInUse)
-                    throw new InvalidOperationException(Messages.IdentityInformationInUse);
+                    throw new ArgumentException(Messages.IdentityInformationInUse);
 
                 var country = await _countryRepository
                     .Query()

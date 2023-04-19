@@ -39,27 +39,6 @@ namespace Contracts.Requests
                 Phone = dto.Phone
                     .Trim()
                     .Normalize(),
-                City = new City
-                {
-                    Name = dto.CityName
-                        .Trim()
-                        .ToLower()
-                        .Normalize(),
-                    County = new County
-                    {
-                        Name = dto.CountyName
-                            .Trim()
-                            .ToLower()
-                            .Normalize(),
-                        Country = new Country
-                        {
-                            Name = dto.CountryName
-                            .Trim()
-                            .ToLower()
-                            .Normalize(),
-                        }
-                    }
-                },
                 PreciseLocation = dto.Latitude.HasValue && dto.Longitude.HasValue
                 ? new PreciseLocation
                 {
