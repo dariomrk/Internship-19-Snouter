@@ -22,6 +22,25 @@ namespace Api.Controllers
             _cityService = cityService;
         }
 
+        [HttpPost(Routes.Location.CreateCity)]
+        public async Task<ActionResult<CityResponse>> CreateCity(
+            [FromRoute] int id,
+            [FromBody] CreateCityRequest city,
+            CancellationToken cancellationToken = default)
+        {
+            if (city is null)
+                return BadRequest();
+
+            var county = await _countyService.FindAsync(id, cancellationToken);
+
+            if (county is null)
+                return BadRequest();
+
+            var result = await _cityService.CreateAsync(county.Id, city);
+
+            return Created($"/api/counties/{county.Id}/cities/{result.Id}", result);
+        }
+
         [HttpGet(Routes.Location.GetAll)]
         public async Task<ActionResult<IEnumerable<CountryResponse>>> GetAll(CancellationToken cancellationToken)
         {
@@ -56,24 +75,23 @@ namespace Api.Controllers
             return Ok(county.ToDto());
         }
 
-        [HttpPost(Routes.Location.CreateCity)]
-        public async Task<ActionResult<CityResponse>> CreateCity(
-            [FromRoute] int id,
-            [FromBody] CreateCityRequest city,
-            CancellationToken cancellationToken = default)
+        [HttpGet(Routes.Location.FindCityById)]
+        public async Task<ActionResult<CityResponse>> FindCityById(
+            [FromRoute] int countyId,
+            [FromRoute] int cityId,
+            CancellationToken cancellationToken)
         {
-            if (city is null)
-                return BadRequest();
-
-            var county = await _countyService.FindAsync(id, cancellationToken);
+            var county = await _countyService.FindAsync(countyId, cancellationToken);
 
             if (county is null)
-                return BadRequest();
+                return NotFound();
 
-            var result = await _cityService.CreateAsync(county.Id, city);
+            var city = county.Cities.FirstOrDefault(c => c.Id == cityId);
 
-            return Created($"/api/counties/{county.Id}/cities/{result.Id}", result);
+            if (city is null)
+                return NotFound();
+
+            return Ok(city.ToDto());
         }
-
     }
 }
