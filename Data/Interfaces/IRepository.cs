@@ -12,5 +12,6 @@ namespace Data.Interfaces
         Task<RepositoryAction> DeleteAsync(TId id, CancellationToken cancellationToken);
         Task BeginTransaction(CancellationToken cancellationToken = default);
         Task CommitTransaction(CancellationToken cancellationToken = default);
+        Task RollbackTransaction(CancellationToken cancellationToken = default);
     }
 }

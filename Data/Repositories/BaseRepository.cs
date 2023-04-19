@@ -115,5 +115,10 @@ namespace Data.Repositories
         {
             await _dbContext.Database.CommitTransactionAsync(cancellationToken);
         }
+
+        public async Task RollbackTransaction(CancellationToken cancellationToken = default)
+        {
+            await _dbContext.Database.RollbackTransactionAsync(cancellationToken);
+        }
     }
 }
