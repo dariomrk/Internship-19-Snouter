@@ -105,5 +105,15 @@ namespace Data.Repositories
                 return await SaveChangesAsync(cancellationToken);
             });
         }
+
+        public async Task BeginTransaction(CancellationToken cancellationToken = default)
+        {
+            await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+        }
+
+        public async Task CommitTransaction(CancellationToken cancellationToken = default)
+        {
+            await _dbContext.Database.CommitTransactionAsync(cancellationToken);
+        }
     }
 }
