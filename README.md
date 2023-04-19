@@ -33,6 +33,10 @@ The solution is separated into four projects:
 - **Common:**
 
   Contains common functionality and dependencies.
+
+- **Contracts:**
+
+  Contains Request / Response data transfer classes.
   
 ## Get started developing
 
