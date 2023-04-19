@@ -25,6 +25,14 @@ namespace Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet(Routes.User.GetAll)]
+        public async Task<ActionResult<IEnumerable<UserResponse>>> GetAllAsync()
+        {
+            var result = await _userService.GetAll();
+
+            return Ok(result.Select(u => u.ToDto()));
+        }
+
         [HttpGet(Routes.User.Find)]
         public async Task<ActionResult<UserResponse>> FindAsync(
             [FromRoute] int id,
@@ -44,8 +52,14 @@ namespace Api.Controllers
             [FromBody] UserRequest request,
             CancellationToken cancellationToken)
         {
+            var result = await _userService.FindAsync(id, cancellationToken);
 
-            return Ok();
+            if (result is null)
+                return NotFound();
+
+            var response = await _userService.UpdateAsync(id, request, cancellationToken);
+
+            return Ok(response);
         }
     }
 }

@@ -72,12 +72,25 @@ namespace Application.Services
                 .Query()
                 .AsNoTracking()
                 .Where(u => u.Id == creationResult.CreatedEntity.Id)
+                .Include(u => u.PreciseLocation)
                 .Include(u => u.City)
                     .ThenInclude(c => c.County)
                     .ThenInclude(c => c.Country)
                 .FirstAsync();
 
             return createdUser.ToDto();
+        }
+
+        public override async Task<ICollection<User>> GetAll(CancellationToken cancellationToken = default)
+        {
+            var users = await _repository
+                .Query()
+                .AsNoTracking()
+                .Include(u => u.PreciseLocation)
+                .Include(u => u.City).ThenInclude(u => u.County).ThenInclude(u => u.Country)
+                .ToListAsync();
+
+            return users;
         }
 
         public override async Task<User?> FindAsync(int id, CancellationToken cancellationToken = default)
@@ -95,22 +108,26 @@ namespace Application.Services
 
         }
 
-        public async Task<UserResponse> UpdateAsync(UserRequest updateUserDetails, CancellationToken cancellationToken = default)
+        public async Task<UserResponse> UpdateAsync(int id, UserRequest updateUserDetails, CancellationToken cancellationToken = default)
         {
+
+            var current = await _repository.FindAsync(id, cancellationToken);
+
             await _repository.BeginTransactionAsync(cancellationToken);
 
             var mapped = updateUserDetails.ToModel();
 
             try
             {
-                var isInformationInUse = await _repository
+                var informationInUse = await _repository
                     .Query()
+                    .Where(u => u.Id != id)
                     .AnyAsync(u => u.Username.Contains(mapped.Username)
                         || u.Email.Contains(mapped.Email)
                         || u.Phone.Contains(mapped.Phone),
                         cancellationToken);
 
-                if (isInformationInUse)
+                if (informationInUse)
                     throw new InvalidOperationException(Messages.IdentityInformationInUse);
 
                 var country = await _countryRepository
@@ -128,7 +145,15 @@ namespace Application.Services
                     .AsNoTracking()
                     .FirstAsync(c => c.Name == mapped.City.Name);
 
-                var updateResult = await _repository.UpdateAsync(mapped, cancellationToken);
+                current.FirstName = mapped.FirstName;
+                current.LastName = mapped.LastName;
+                current.Email = mapped.Email;
+                current.Phone = mapped.Phone;
+                current.Username = mapped.Username;
+                current.City = mapped.City;
+                current.PreciseLocation = mapped.PreciseLocation;
+
+                var updateResult = await _repository.UpdateAsync(current, cancellationToken);
 
                 if (updateResult is not RepositoryAction.Success)
                     throw new Exception(Messages.RepositoryActionFailed);

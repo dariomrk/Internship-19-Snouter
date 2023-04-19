@@ -5,6 +5,7 @@ namespace Contracts.Responses
 {
     public class UserResponse
     {
+        public int Id { get; set; }
         public string FirstName { get; init; }
         public string LastName { get; init; }
         public string Username { get; init; }
@@ -23,6 +24,7 @@ namespace Contracts.Responses
         {
             return new UserResponse
             {
+                Id = model.Id,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Username = model.Username,
