@@ -5,13 +5,6 @@ namespace Contracts.Responses
 {
     public class UserResponse
     {
-        public class UserResponseProduct
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public ProductAvailability Availability { get; set; }
-            public bool HasExpired { get; set; }
-        }
         public string FirstName { get; init; }
         public string LastName { get; init; }
         public string Username { get; init; }
@@ -22,7 +15,6 @@ namespace Contracts.Responses
         public string CountryName { get; init; }
         public double? Latitude { get; init; }
         public double? Longitude { get; init; }
-        public ICollection<UserResponseProduct> Products { get; set; } = new List<UserResponseProduct>();
     }
 
     public static partial class ContractMappings
@@ -41,15 +33,6 @@ namespace Contracts.Responses
                 CountryName = model.City?.County?.Country?.Name ?? Messages.NoInformationAvailable,
                 Latitude = model.PreciseLocation?.Latitude ?? null,
                 Longitude = model.PreciseLocation?.Longitude ?? null,
-                Products = model.Products
-                    .Select(p => new UserResponse.UserResponseProduct
-                    {
-                        Id = p.Id,
-                        Name = p.Name,
-                        Availability = p.Availability,
-                        HasExpired = p.HasExpired,
-                    })
-                    .ToList(),
             };
         }
     }
