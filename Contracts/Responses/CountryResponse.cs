@@ -6,7 +6,7 @@ namespace Contracts.Responses
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<CountyResponse> Counties { get; set; } = new List<CountyResponse>();
+        public IEnumerable<string> Counties { get; set; } = new List<string>();
     }
 
     public static partial class ContractMappings
@@ -17,7 +17,7 @@ namespace Contracts.Responses
             {
                 Id = model.Id,
                 Name = model.Name,
-                Counties = model.Counties.Select(c => c.ToDto()),
+                Counties = model.Counties.Select(c => c.Name),
             };
         }
     }

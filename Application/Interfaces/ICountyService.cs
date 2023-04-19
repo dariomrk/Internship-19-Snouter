@@ -2,5 +2,8 @@
 
 namespace Application.Interfaces
 {
-    public interface ICountyService : IService<County, int> { }
+    public interface ICountyService : IService<County, int>
+    {
+        Task<County?> FindByNameAsync(string name, CancellationToken cancellationToken = default);
+    }
 }

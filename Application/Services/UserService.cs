@@ -111,7 +111,10 @@ namespace Application.Services
         public async Task<UserResponse> UpdateAsync(int id, UserRequest updateUserDetails, CancellationToken cancellationToken = default)
         {
 
-            var current = await _repository.FindAsync(id, cancellationToken);
+            var currentUser = await _repository.FindAsync(id, cancellationToken);
+
+            if (currentUser is null)
+                throw new InvalidOperationException();
 
             await _repository.BeginTransactionAsync(cancellationToken);
 
@@ -145,15 +148,15 @@ namespace Application.Services
                     .AsNoTracking()
                     .FirstAsync(c => c.Name == mapped.City.Name);
 
-                current.FirstName = mapped.FirstName;
-                current.LastName = mapped.LastName;
-                current.Email = mapped.Email;
-                current.Phone = mapped.Phone;
-                current.Username = mapped.Username;
-                current.City = mapped.City;
-                current.PreciseLocation = mapped.PreciseLocation;
+                currentUser.FirstName = mapped.FirstName;
+                currentUser.LastName = mapped.LastName;
+                currentUser.Email = mapped.Email;
+                currentUser.Phone = mapped.Phone;
+                currentUser.Username = mapped.Username;
+                currentUser.City = mapped.City;
+                currentUser.PreciseLocation = mapped.PreciseLocation;
 
-                var updateResult = await _repository.UpdateAsync(current, cancellationToken);
+                var updateResult = await _repository.UpdateAsync(currentUser, cancellationToken);
 
                 if (updateResult is not RepositoryAction.Success)
                     throw new Exception(Messages.RepositoryActionFailed);

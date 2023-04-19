@@ -22,7 +22,7 @@ namespace Api.Controllers
         {
             var result = await _userService.CreateAsync(request, cancellationToken);
 
-            return Ok(result);
+            return Created($"/api/users/{result.Id}", result);
         }
 
         [HttpGet(Routes.User.GetAll)]
