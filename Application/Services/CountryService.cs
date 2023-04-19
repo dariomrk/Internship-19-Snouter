@@ -25,7 +25,7 @@ namespace Application.Services
             _cityRepository = cityRepository;
         }
 
-        public async Task<CreateCountryResponse> CreateAsync([FromBody] CreateCountryRequest request, CancellationToken cancellationToken = default)
+        public async Task<CountryResponse> CreateAsync([FromBody] CreateCountryRequest request, CancellationToken cancellationToken = default)
         {
             var mapped = request.ToModel();
 
@@ -41,7 +41,7 @@ namespace Application.Services
             if (creationResult.RepositoryActionResult is not Data.Enums.RepositoryAction.Success)
                 throw new Exception(Messages.RepositoryActionFailed);
 
-            return creationResult.CreatedEntity.ToCreateCountryResponse();
+            return creationResult.CreatedEntity.ToDto();
 
         }
     }

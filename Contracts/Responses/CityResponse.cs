@@ -2,7 +2,7 @@
 
 namespace Contracts.Responses
 {
-    public class CreateCountryResponse
+    public class CityResponse
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -10,9 +10,9 @@ namespace Contracts.Responses
 
     public static partial class ContractMappings
     {
-        public static CreateCountryResponse ToCreateCountryResponse(this Country model)
+        public static CityResponse ToDto(this City model)
         {
-            return new CreateCountryResponse
+            return new CityResponse
             {
                 Id = model.Id,
                 Name = model.Name,

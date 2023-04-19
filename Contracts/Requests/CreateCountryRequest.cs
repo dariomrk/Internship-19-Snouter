@@ -5,7 +5,7 @@ namespace Contracts.Requests
     public class CreateCountryRequest
     {
         public string Name { get; set; }
-        public ICollection<CreateCountyRequest> Counties { get; set; } = new List<CreateCountyRequest>();
+        public IEnumerable<CreateCountyRequest> Counties { get; set; } = new List<CreateCountyRequest>();
     }
 
     public static partial class ContractMappings
@@ -14,28 +14,19 @@ namespace Contracts.Requests
         {
             return new Country
             {
-                Name = dto.Name
-                    .Trim()
-                    .ToLower()
-                    .Normalize(),
+                Name = dto.Name.Trim().ToLower().Normalize(),
                 Counties = dto.Counties
                     .Select(county => new County
                     {
-                        Name = county.Name
-                    .Trim()
-                    .ToLower()
-                    .Normalize(),
+                        Name = county.Name.Trim().ToLower().Normalize(),
                         Cities = county.Cities
-                        .Select(city => new City
-                        {
-                            Name = city.Name
-                        .Trim()
-                        .ToLower()
-                        .Normalize(),
-                        })
-                    .ToList()
+                            .Select(city => new City
+                            {
+                                Name = city.Name.Trim().ToLower().Normalize(),
+                            })
+                        .ToList()
                     })
-                .ToList()
+                    .ToList()
             };
         }
     }

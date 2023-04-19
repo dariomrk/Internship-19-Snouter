@@ -7,6 +7,6 @@ namespace Application.Interfaces
 {
     public interface ICountryService : IService<Country, int>
     {
-        Task<CreateCountryResponse> CreateAsync([FromBody] CreateCountryRequest request, CancellationToken cancellationToken = default);
+        Task<CountryResponse> CreateAsync([FromBody] CreateCountryRequest request, CancellationToken cancellationToken = default);
     }
 }

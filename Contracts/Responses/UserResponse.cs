@@ -19,7 +19,7 @@ namespace Contracts.Responses
 
     public static partial class ContractMappings
     {
-        public static UserResponse ToUserResponse(this User model)
+        public static UserResponse ToDto(this User model)
         {
             return new UserResponse
             {

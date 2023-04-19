@@ -16,7 +16,7 @@ namespace Api.Controllers
         }
 
         [HttpPost(Routes.User.Create)]
-        public async Task<ActionResult<CreateUserResponse>> CreateAsync(
+        public async Task<ActionResult<UserResponse>> CreateAsync(
             [FromBody] CreateUserRequest request,
             CancellationToken cancellationToken)
         {
@@ -33,7 +33,7 @@ namespace Api.Controllers
             if (result is null)
                 return NotFound();
 
-            return Ok(result.ToUserResponse());
+            return Ok(result.ToDto());
         }
     }
 }

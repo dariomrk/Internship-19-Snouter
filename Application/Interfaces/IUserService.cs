@@ -6,6 +6,6 @@ namespace Application.Interfaces
 {
     public interface IUserService : IService<User, int>
     {
-        Task<CreateUserResponse> CreateAsync(CreateUserRequest newUserDetails, CancellationToken cancellationToken = default);
+        Task<UserResponse> CreateAsync(CreateUserRequest newUserDetails, CancellationToken cancellationToken = default);
     }
 }

@@ -11,16 +11,22 @@ namespace Application.Services
     public class UserService : BaseService<User, int>, IUserService
     {
         private readonly IRepository<City, int> _cityRepository;
+        private readonly IRepository<County, int> _countyRepository;
+        private readonly IRepository<Country, int> _countryRepository;
 
         public UserService(
             IRepository<User, int> userRepository,
-            IRepository<City, int> cityRepository
+            IRepository<City, int> cityRepository,
+            IRepository<County, int> countyRepository,
+            IRepository<Country, int> countryRepository
             ) : base(userRepository)
         {
             _cityRepository = cityRepository;
+            _countyRepository = countyRepository;
+            _countryRepository = countryRepository;
         }
 
-        public async Task<CreateUserResponse> CreateAsync(CreateUserRequest newUserDetails, CancellationToken cancellationToken = default)
+        public async Task<UserResponse> CreateAsync(CreateUserRequest newUserDetails, CancellationToken cancellationToken = default)
         {
             var mapped = newUserDetails.ToModel();
 
@@ -32,23 +38,45 @@ namespace Application.Services
                     cancellationToken);
 
             if (isInformationInUse)
-                throw new InvalidOperationException(Messages.IdentityInformationInUse);
+                throw new InvalidOperationException(Messages.IdentityInformationInUse); // TODO use custom exception -> catch in middleware
 
-            var city = await _cityRepository
-                .Query()
-                .FirstOrDefaultAsync(c => mapped.City.Name.Contains(c.Name), cancellationToken);
+            try
+            {
+                var country = await _countryRepository
+                    .Query()
+                    .AsNoTracking()
+                    .FirstAsync(c => c.Name == mapped.City.County.Country.Name);
 
-            if (city is null)
-                throw new InvalidOperationException(Messages.CityNotDefined);
+                var county = await _countyRepository
+                    .Query()
+                    .AsNoTracking()
+                    .FirstAsync(c => c.Name == mapped.City.County.Name);
 
-            mapped.City = city;
+                var city = await _cityRepository
+                    .Query()
+                    .AsNoTracking()
+                    .FirstAsync(c => c.Name == mapped.City.Name);
+            }
+            catch (Exception)
+            {
+                throw new InvalidOperationException(Messages.CityNotDefined);  // TODO use custom exception -> catch in middleware
+            }
 
             var creationResult = await _repository.CreateAsync(mapped, cancellationToken);
 
             if (creationResult.RepositoryActionResult is not Data.Enums.RepositoryAction.Success)
-                throw new Exception(Messages.RepositoryActionFailed);
+                throw new Exception(Messages.RepositoryActionFailed);  // TODO use custom exception -> catch in middleware
 
-            return creationResult.CreatedEntity.ToCreateUserResponse();
+            var createdUser = await _repository
+                .Query()
+                .AsNoTracking()
+                .Where(u => u.Id == creationResult.CreatedEntity.Id)
+                .Include(u => u.City)
+                    .ThenInclude(c => c.County)
+                    .ThenInclude(c => c.Country)
+                .FirstAsync();
+
+            return createdUser.ToDto();
         }
 
         public override async Task<User?> FindAsync(int id, CancellationToken cancellationToken = default)

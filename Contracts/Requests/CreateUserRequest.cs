@@ -45,6 +45,20 @@ namespace Contracts.Requests
                         .Trim()
                         .ToLower()
                         .Normalize(),
+                    County = new County
+                    {
+                        Name = dto.CountyName
+                            .Trim()
+                            .ToLower()
+                            .Normalize(),
+                        Country = new Country
+                        {
+                            Name = dto.CountryName
+                            .Trim()
+                            .ToLower()
+                            .Normalize(),
+                        }
+                    }
                 },
                 PreciseLocation = dto.Latitude.HasValue && dto.Longitude.HasValue
                 ? new PreciseLocation
