@@ -106,17 +106,18 @@ namespace Data.Repositories
             });
         }
 
-        public async Task BeginTransaction(CancellationToken cancellationToken = default)
+        public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
         {
             await _dbContext.Database.BeginTransactionAsync(cancellationToken);
         }
 
-        public async Task CommitTransaction(CancellationToken cancellationToken = default)
+        public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
         {
             await _dbContext.Database.CommitTransactionAsync(cancellationToken);
         }
 
-        public async Task RollbackTransaction(CancellationToken cancellationToken = default)
+        public async Task RollbackTransactionAsync
+            (CancellationToken cancellationToken = default)
         {
             await _dbContext.Database.RollbackTransactionAsync(cancellationToken);
         }

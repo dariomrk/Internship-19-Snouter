@@ -10,8 +10,8 @@ namespace Data.Interfaces
         Task<(RepositoryAction RepositoryActionResult, TEntity CreatedEntity)> CreateAsync(TEntity entity, CancellationToken cancellationToken);
         Task<RepositoryAction> UpdateAsync(TEntity entity, CancellationToken cancellationToken);
         Task<RepositoryAction> DeleteAsync(TId id, CancellationToken cancellationToken);
-        Task BeginTransaction(CancellationToken cancellationToken = default);
-        Task CommitTransaction(CancellationToken cancellationToken = default);
-        Task RollbackTransaction(CancellationToken cancellationToken = default);
+        Task BeginTransactionAsync(CancellationToken cancellationToken = default);
+        Task CommitTransactionAsync(CancellationToken cancellationToken = default);
+        Task RollbackTransactionAsync(CancellationToken cancellationToken = default);
     }
 }
