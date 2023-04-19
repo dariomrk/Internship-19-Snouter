@@ -25,14 +25,14 @@ namespace Application.Services
             var county = await _countyService.FindAsync(countyId, cancellationToken);
 
             if (county is null)
-                throw new InvalidOperationException();
+                throw new ArgumentException(Messages.CountyInvalid);
 
             var mapped = newCityDetails.ToModel(county);
 
             var creationResult = await _repository.CreateAsync(mapped, cancellationToken);
 
             if (creationResult.RepositoryActionResult is not Data.Enums.RepositoryAction.Success)
-                throw new Exception(Messages.RepositoryActionFailed);  // TODO use custom exception -> catch in middleware
+                throw new Exception(Messages.RepositoryActionFailed);
 
             return creationResult.CreatedEntity.ToDto();
         }

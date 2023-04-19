@@ -93,5 +93,26 @@ namespace Api.Controllers
 
             return Ok(city.ToDto());
         }
+
+        [HttpDelete(Routes.Location.DeleteCity)]
+        public async Task<ActionResult> DeleteCity(
+            [FromRoute] int countyId,
+            [FromRoute] int cityId,
+            CancellationToken cancellationToken)
+        {
+            var county = await _countyService.FindAsync(countyId, cancellationToken);
+
+            if (county is null)
+                return BadRequest();
+
+            var city = county.Cities.FirstOrDefault(c => c.Id == cityId);
+
+            if (city is null)
+                return BadRequest();
+
+            await _cityService.DeleteAsync(cityId, cancellationToken);
+
+            return NoContent();
+        }
     }
 }
