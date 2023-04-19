@@ -1,6 +1,4 @@
 ﻿using Application.Interfaces;
-using Contracts.Requests;
-using Contracts.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -13,16 +11,6 @@ namespace Api.Controllers
         public CountryController(ICountryService countryService)
         {
             _countryService = countryService;
-        }
-
-        [HttpPost(Routes.Country.Create)]
-        public async Task<ActionResult<CountryResponse>> CreateAsync(
-            [FromBody] CreateCountryRequest request,
-            CancellationToken cancellationToken = default)
-        {
-            var result = await _countryService.CreateAsync(request, cancellationToken);
-
-            return Ok(result);
         }
     }
 }
