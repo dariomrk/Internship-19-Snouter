@@ -17,7 +17,7 @@ namespace Api.Controllers
 
         [HttpPost(Routes.Country.Create)]
         public async Task<ActionResult<CountryResponse>> CreateAsync(
-            CreateCountryRequest request,
+            [FromBody] CreateCountryRequest request,
             CancellationToken cancellationToken = default)
         {
             var result = await _countryService.CreateAsync(request, cancellationToken);

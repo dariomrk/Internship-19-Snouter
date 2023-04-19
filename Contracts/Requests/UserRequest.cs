@@ -2,7 +2,7 @@
 
 namespace Contracts.Requests
 {
-    public class CreateUserRequest
+    public class UserRequest
     {
         public string FirstName { get; init; }
         public string LastName { get; init; }
@@ -18,7 +18,7 @@ namespace Contracts.Requests
 
     public static partial class ContractMappings
     {
-        public static User ToModel(this CreateUserRequest dto)
+        public static User ToModel(this UserRequest dto)
         {
             return new User
             {

@@ -17,7 +17,7 @@ namespace Api.Controllers
 
         [HttpPost(Routes.User.Create)]
         public async Task<ActionResult<UserResponse>> CreateAsync(
-            [FromBody] CreateUserRequest request,
+            [FromBody] UserRequest request,
             CancellationToken cancellationToken)
         {
             var result = await _userService.CreateAsync(request, cancellationToken);
@@ -26,14 +26,26 @@ namespace Api.Controllers
         }
 
         [HttpGet(Routes.User.Find)]
-        public async Task<ActionResult<UserResponse>> FindAsync(int id)
+        public async Task<ActionResult<UserResponse>> FindAsync(
+            [FromRoute] int id,
+            CancellationToken cancellationToken)
         {
-            var result = await _userService.FindAsync(id);
+            var result = await _userService.FindAsync(id, cancellationToken);
 
             if (result is null)
                 return NotFound();
 
             return Ok(result.ToDto());
+        }
+
+        [HttpPut(Routes.User.Update)]
+        public async Task<ActionResult<UserResponse>> UpdateAsync(
+            [FromRoute] int id,
+            [FromBody] UserRequest request,
+            CancellationToken cancellationToken)
+        {
+
+            return Ok();
         }
     }
 }

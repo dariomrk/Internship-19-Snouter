@@ -2,6 +2,7 @@
 using Common.Constants;
 using Contracts.Requests;
 using Contracts.Responses;
+using Data.Enums;
 using Data.Interfaces;
 using Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,7 @@ namespace Application.Services
             _countryRepository = countryRepository;
         }
 
-        public async Task<UserResponse> CreateAsync(CreateUserRequest newUserDetails, CancellationToken cancellationToken = default)
+        public async Task<UserResponse> CreateAsync(UserRequest newUserDetails, CancellationToken cancellationToken = default)
         {
             var mapped = newUserDetails.ToModel();
 
@@ -92,6 +93,54 @@ namespace Application.Services
 
             return user;
 
+        }
+
+        public async Task<UserResponse> UpdateAsync(UserRequest updateUserDetails, CancellationToken cancellationToken = default)
+        {
+            await _repository.BeginTransactionAsync(cancellationToken);
+
+            var mapped = updateUserDetails.ToModel();
+
+            try
+            {
+                var isInformationInUse = await _repository
+                    .Query()
+                    .AnyAsync(u => u.Username.Contains(mapped.Username)
+                        || u.Email.Contains(mapped.Email)
+                        || u.Phone.Contains(mapped.Phone),
+                        cancellationToken);
+
+                if (isInformationInUse)
+                    throw new InvalidOperationException(Messages.IdentityInformationInUse);
+
+                var country = await _countryRepository
+                    .Query()
+                    .AsNoTracking()
+                    .FirstAsync(c => c.Name == mapped.City.County.Country.Name);
+
+                var county = await _countyRepository
+                    .Query()
+                    .AsNoTracking()
+                    .FirstAsync(c => c.Name == mapped.City.County.Name);
+
+                var city = await _cityRepository
+                    .Query()
+                    .AsNoTracking()
+                    .FirstAsync(c => c.Name == mapped.City.Name);
+
+                var updateResult = await _repository.UpdateAsync(mapped, cancellationToken);
+
+                if (updateResult is not RepositoryAction.Success)
+                    throw new Exception(Messages.RepositoryActionFailed);
+            }
+            catch (Exception)
+            {
+                await _repository.RollbackTransactionAsync(cancellationToken);
+                throw new InvalidOperationException(Messages.UpdateFailed);
+            }
+
+            await _repository.CommitTransactionAsync(cancellationToken);
+            return mapped.ToDto();
         }
     }
 }
