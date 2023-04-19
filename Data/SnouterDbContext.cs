@@ -1,4 +1,5 @@
 ﻿using Data.Models;
+using Data.Seeds;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data
@@ -24,7 +25,8 @@ namespace Data
                 .ConfigurePreciseLocation()
                 .ConfigureProduct()
                 .ConfigureSubCategory()
-                .ConfigureUser();
+                .ConfigureUser()
+                .AddCroatia();
         }
     }
 }
