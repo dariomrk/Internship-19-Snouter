@@ -51,9 +51,9 @@ namespace Application.Services
             return creationResult.CreatedEntity.ToCreateUserResponse();
         }
 
-        public override Task<User?> FindAsync(int id, CancellationToken cancellationToken = default)
+        public override async Task<User?> FindAsync(int id, CancellationToken cancellationToken = default)
         {
-            var user = _repository
+            var user = await _repository
                 .Query()
                 .Include(u => u.Products)
                 .Include(u => u.PreciseLocation)
