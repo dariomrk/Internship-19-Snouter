@@ -94,11 +94,33 @@ namespace Api.Controllers
             return Ok(city.ToDto());
         }
 
+        [HttpPatch(Routes.Locations.UpdateCityName)]
+        public async Task<ActionResult> UpdateCityName(
+            [FromRoute] int countyId,
+            [FromRoute] int cityId,
+            [FromBody] UpdateNameRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            var county = await _countyService.FindAsync(countyId, cancellationToken);
+
+            if (county is null)
+                return NotFound();
+
+            var city = county.Cities.FirstOrDefault(c => c.Id == cityId);
+
+            if (city is null)
+                return BadRequest();
+
+            await _cityService.UpdateNameAsync(county.Id, city.Id, request.Name, cancellationToken);
+
+            return Accepted();
+        }
+
         [HttpDelete(Routes.Locations.DeleteCity)]
         public async Task<ActionResult> DeleteCity(
             [FromRoute] int countyId,
             [FromRoute] int cityId,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             var county = await _countyService.FindAsync(countyId, cancellationToken);
 

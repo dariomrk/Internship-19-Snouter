@@ -67,7 +67,7 @@ namespace Application.Services
             if (entity is null)
                 throw new ArgumentNullException(nameof(entity));
 
-            if (await _repository.CheckExistsAsync(entity.Id, cancellationToken))
+            if (!await _repository.CheckExistsAsync(entity.Id, cancellationToken))
                 throw new ArgumentException(string.Format(Messages.EntityDoesNotExist, typeof(TEntity), entity.Id));
 
             var repositoryResult = await _repository.UpdateAsync(entity, cancellationToken);

@@ -64,4 +64,4 @@ In the Package Manager Console execute:
 
 ### Applying existing migrations
 
-Open the Package Manager Console, change the Default project to `Data` and execute: `Update-Database`.
+Open the Package Manager Console, change the default project to `Data` and execute: `Update-Database`.

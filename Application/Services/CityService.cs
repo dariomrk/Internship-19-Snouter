@@ -4,17 +4,18 @@ using Contracts.Requests;
 using Contracts.Responses;
 using Data.Interfaces;
 using Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
     public class CityService : BaseService<City, int>, ICityService
     {
-        private readonly ICountyService _countyService;
+        private readonly IRepository<County, int> _countyRepository;
         public CityService(
             IRepository<City, int> repository,
-            ICountyService countyService) : base(repository)
+            IRepository<County, int> countyRepository) : base(repository)
         {
-            _countyService = countyService;
+            _countyRepository = countyRepository;
         }
 
         public async Task<CityResponse> CreateAsync(
@@ -22,7 +23,7 @@ namespace Application.Services
             CreateCityRequest newCityRequest,
             CancellationToken cancellationToken = default)
         {
-            var county = await _countyService.FindAsync(countyId, cancellationToken);
+            var county = await _countyRepository.FindAsync(countyId, cancellationToken);
 
             if (county is null)
                 throw new ArgumentException(Messages.CountyInvalid);
@@ -35,6 +36,26 @@ namespace Application.Services
                 throw new Exception(Messages.RepositoryActionFailed);
 
             return creationResult.CreatedEntity.ToDto();
+        }
+
+        public async Task UpdateNameAsync(
+            int countyId,
+            int cityId,
+            string newName,
+            CancellationToken cancellationToken = default)
+        {
+            var county = await _countyRepository.FindAsync(countyId, cancellationToken);
+
+            if (county is null)
+                throw new ArgumentException(Messages.CountyInvalid);
+
+            var city = await _repository
+                .Query()
+                .FirstOrDefaultAsync(c => c.Id == cityId && c.CountyId == countyId, cancellationToken);
+
+            city!.Name = newName;
+
+            await _repository.UpdateAsync(city, cancellationToken);
         }
     }
 }

@@ -13,6 +13,7 @@
             public const string FindCountyById = $"{ControllerBase}/counties/{{id:int}}";
             public const string FindCountyByName = $"{ControllerBase}/counties/{{name}}";
             public const string FindCityById = $"{ControllerBase}/counties/{{countyId:int}}/cities/{{cityId:int}}";
+            public const string UpdateCityName = $"{ControllerBase}/counties/{{countyId:int}}/cities/{{cityId:int}}/name";
             public const string DeleteCity = $"{ControllerBase}/counties/{{countyId:int}}/cities/{{cityId:int}}";
         }
         public static class Users
