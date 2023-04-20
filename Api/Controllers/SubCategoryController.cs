@@ -12,9 +12,9 @@ namespace Api.Controllers
         public class SubCategoryController : ControllerBase
         {
             private readonly ICategoryService _categoryService;
-            private readonly ISubCategoryservice _subCategoryService;
+            private readonly ISubCategoryService _subCategoryService;
 
-            public SubCategoryController(ICategoryService categoryService, ISubCategoryservice subCategoryservice)
+            public SubCategoryController(ICategoryService categoryService, ISubCategoryService subCategoryservice)
             {
                 _categoryService = categoryService;
                 _subCategoryService = subCategoryservice;

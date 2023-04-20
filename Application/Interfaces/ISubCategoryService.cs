@@ -4,7 +4,7 @@ using Data.Models;
 
 namespace Application.Interfaces
 {
-    public interface ISubCategoryservice : IService<SubCategory, int>
+    public interface ISubCategoryService : IService<SubCategory, int>
     {
         Task<SubCategoryResponse> CreateAsync(int categoryId, CreateSubCategoryRequest newSubCategoryRequest, CancellationToken cancellationToken = default);
     }

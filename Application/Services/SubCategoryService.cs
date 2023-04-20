@@ -7,7 +7,7 @@ using Data.Models;
 
 namespace Application.Services
 {
-    public class SubCategoryService : BaseService<SubCategory, int>, ISubCategoryservice
+    public class SubCategoryService : BaseService<SubCategory, int>, ISubCategoryService
     {
         private readonly IRepository<Category, int> _categoryRepository;
 

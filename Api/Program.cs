@@ -60,7 +60,7 @@ namespace Api
             services.AddScoped<ICurrencyService, CurrencyService>();
             services.AddScoped<IPreciseLocationService, PreciseLocationService>();
             services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<ISubCategoryservice, SubCategoryService>();
+            services.AddScoped<ISubCategoryService, SubCategoryService>();
             services.AddScoped<IUserService, UserService>();
             #endregion
 
