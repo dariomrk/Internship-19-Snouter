@@ -31,13 +31,13 @@ The solution is separated into four projects:
   Responsible for persisting and retrieving data from storage. It includes a database context that encapsulates the data access logic, and repositories that abstract away the details of data access.
 
 - **Common:**
-
+  
   Contains common functionality and dependencies.
 
 - **Contracts:**
-
-  Contains Request / Response data transfer classes.
   
+  Contains Request / Response data transfer classes.
+
 ## Get started developing
 
 ### Database
@@ -65,3 +65,7 @@ In the Package Manager Console execute:
 ### Applying existing migrations
 
 Open the Package Manager Console, change the default project to `Data` and execute: `Update-Database`.
+
+### Database diagram
+
+![Database diagram](./Database.svg)
