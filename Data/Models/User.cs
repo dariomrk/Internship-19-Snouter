@@ -1,4 +1,6 @@
-﻿namespace Data.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Data.Models
 {
     public class User : BaseEntity<int>
     {
@@ -11,5 +13,17 @@
         public int CityId { get; set; }
         public PreciseLocation? PreciseLocation { get; set; } = null!;
         public ICollection<Product> Products { get; set; } = new List<Product>();
+    }
+
+    public static partial class EntityExtensions
+    {
+        public static IQueryable<User> IncludeRelated(this IQueryable<User> query)
+        {
+            return query
+                .Include(u => u.PreciseLocation)
+                .Include(u => u.City)
+                    .ThenInclude(c => c.County)
+                    .ThenInclude(c => c.Country);
+        }
     }
 }

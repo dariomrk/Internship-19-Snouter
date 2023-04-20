@@ -90,5 +90,15 @@ namespace Api.Controllers
 
             return Ok();
         }
+
+        [HttpDelete(Routes.Products.Delete)]
+        public async Task<ActionResult> Delete(
+            [FromRoute] int id,
+            CancellationToken cancellationToken)
+        {
+            await _productService.DeleteAsync(id, cancellationToken);
+
+            return Ok();
+        }
     }
 }

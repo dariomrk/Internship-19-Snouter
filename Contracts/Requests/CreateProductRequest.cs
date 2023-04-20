@@ -38,6 +38,7 @@ namespace Contracts.Requests
                 {
                     Latitude = dto.Latitude.Value,
                     Longitude = dto.Longitude.Value,
+                    LocationType = LocationType.ProductLocation,
                 }
                 : null,
                 State = Enum.Parse<ProductState>(dto.State, true),

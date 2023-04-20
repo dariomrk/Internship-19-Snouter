@@ -85,10 +85,7 @@ namespace Application.Services
                 .Query()
                 .AsNoTracking()
                 .Where(u => u.Id == creationResult.CreatedEntity.Id)
-                .Include(u => u.PreciseLocation)
-                .Include(u => u.City)
-                    .ThenInclude(c => c.County)
-                    .ThenInclude(c => c.Country)
+                .IncludeRelated()
                 .FirstAsync();
 
             return createdUser.ToDto();
@@ -100,7 +97,7 @@ namespace Application.Services
                 .Query()
                 .AsNoTracking()
                 .Include(u => u.PreciseLocation)
-                .Include(u => u.City).ThenInclude(u => u.County).ThenInclude(u => u.Country)
+                .IncludeRelated()
                 .ToListAsync();
 
             return users;
@@ -112,9 +109,7 @@ namespace Application.Services
                 .Query()
                 .Include(u => u.Products)
                 .Include(u => u.PreciseLocation)
-                .Include(u => u.City)
-                    .ThenInclude(c => c.County)
-                    .ThenInclude(c => c.Country)
+                .IncludeRelated()
                 .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
             return user;

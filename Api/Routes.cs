@@ -51,9 +51,9 @@
             public const string GetAllFromCategory = $"{ApiBase}/categories/{{categoryId:int}}/products";
             public const string GetAllFromSubCategory = $"{ApiBase}/categories/{{categoryId:int}}/sub-categories/{{subCategoryId:int}}/products";
             public const string FindById = $"{ControllerBase}/{{id:int}}";
-            public const string UpdateAvailability = $"{ControllerBase}/{{id:int}}/availability"; // TODO
-            public const string Renew = $"{ControllerBase}/{{id:int}}/renew"; // TODO
-            public const string Delete = $"{ControllerBase}/{{id:int}}"; // TODO
+            public const string UpdateAvailability = $"{ControllerBase}/{{id:int}}/availability";
+            public const string Renew = $"{ControllerBase}/{{id:int}}/renew";
+            public const string Delete = $"{ControllerBase}/{{id:int}}";
         }
     }
 }
