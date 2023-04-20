@@ -31,13 +31,19 @@
             private const string ControllerBase = $"{ApiBase}/categories";
 
             public const string CreateCategory = $"{ControllerBase}";
-            public const string CreateSubCategory = $"{ControllerBase}/categories/{{categoryId:int}}/sub-categories";
             public const string GetAllCategories = $"{ControllerBase}";
-            public const string GetSubCategories = $"{ControllerBase}/categories/{{categoryId:int}}/sub-categories";
             public const string UpdateCategoryName = $"{ControllerBase}/categories/{{categoryId:int}}/name";
+            public const string DeleteCategory = $"{ControllerBase}/categories/{{categoryId:int}}/sub-categories";
+        }
+
+        public static class SubCategories
+        {
+            private const string ControllerBase = $"{ApiBase}/categories";
+
+            public const string CreateSubCategory = $"{ControllerBase}/categories/{{categoryId:int}}/sub-categories";
+            public const string GetSubCategories = $"{ControllerBase}/categories/{{categoryId:int}}/sub-categories";
             public const string UpdateSubCategoryName = $"{ControllerBase}/categories/{{categoryId:int}}/sub-categories/{{subCategoryId:int}}/name";
-            public const string DeleteCategory = $"{ControllerBase}/categories/{{categoryId:int}}/sub-categories"; // TODO
-            public const string DeleteSubCategory = $"{ControllerBase}/categories/{{categoryId:int}}/sub-categories/{{subCategoryId:int}}/"; // TODO
+            public const string DeleteSubCategory = $"{ControllerBase}/categories/{{categoryId:int}}/sub-categories/{{subCategoryId:int}}/";
         }
 
         public static class Products

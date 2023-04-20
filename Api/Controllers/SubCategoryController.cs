@@ -20,7 +20,7 @@ namespace Api.Controllers
                 _subCategoryService = subCategoryservice;
             }
 
-            [HttpPost(Routes.Categories.CreateSubCategory)]
+            [HttpPost(Routes.SubCategories.CreateSubCategory)]
             public async Task<ActionResult<SubCategoryResponse>> CreateSubCategory(
                 [FromRoute] int categoryId,
                 [FromBody] CreateSubCategoryRequest newSubCategory,
@@ -34,7 +34,7 @@ namespace Api.Controllers
                 return Created($"api/categories/{categoryId}/sub-categories/{result.Id}/products", result);
             }
 
-            [HttpGet(Routes.Categories.GetSubCategories)]
+            [HttpGet(Routes.SubCategories.GetSubCategories)]
             public async Task<ActionResult<IEnumerable<SubCategoryResponse>>> GetSubCategories(
                 [FromRoute] int categoryId,
                 CancellationToken cancellationToken)
@@ -52,7 +52,7 @@ namespace Api.Controllers
                 return Ok(result.Select(sc => sc.ToDto()));
             }
 
-            [HttpPatch(Routes.Categories.UpdateSubCategoryName)]
+            [HttpPatch(Routes.SubCategories.UpdateSubCategoryName)]
             public async Task<ActionResult> UpdateSubCategoryName(
                 [FromBody] UpdateNameRequest request,
                 [FromRoute] int subCategoryId,
@@ -70,7 +70,7 @@ namespace Api.Controllers
                 return Accepted();
             }
 
-            [HttpDelete(Routes.Categories.DeleteSubCategory)]
+            [HttpDelete(Routes.SubCategories.DeleteSubCategory)]
             public async Task<ActionResult> DeleteSubCategory(
                 [FromRoute] int subCategoryId,
                 CancellationToken cancellationToken = default)
