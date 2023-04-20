@@ -18,13 +18,14 @@ namespace Contracts.Requests
         public int SubCategoryId { get; set; }
         public JsonObject Properties { get; set; }
         public int CreatorId { get; set; }
+        public IEnumerable<string> ImagesBase64 { get; set; } = new List<string>();
     }
 
     public static partial class ContractMappings
     {
         public static Product ToModel(this CreateProductRequest dto)
         {
-            return new Product
+            var product = new Product
             {
                 Name = dto.Name,
                 Slug = dto.Slug,
@@ -46,7 +47,14 @@ namespace Contracts.Requests
                 CreatorId = dto.CreatorId,
                 PublishedAt = DateTime.UtcNow,
                 RenewedAt = DateTime.UtcNow,
+                Images = dto.ImagesBase64.Select(base64 => new Image
+                {
+                    ImageBase64 = base64,
+                })
+                .ToList(),
             };
+
+            return product;
         }
     }
 }

@@ -66,9 +66,9 @@ namespace Data
             var builder = modelBuilder.Entity<Image>();
 
             builder
-                .Property(x => x.ImageBytes)
+                .Property(x => x.ImageBase64)
                 .IsRequired()
-                .HasColumnType("bytea");
+                .HasColumnType("text");
 
             return modelBuilder;
         }
