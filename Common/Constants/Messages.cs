@@ -12,5 +12,6 @@
         public const string UpdateFailed = "Update failed. No changes have been applied.";
         public const string CountyInvalid = "The provided county is invalid.";
         public const string CategoryInvalid = "The provided category is invalid.";
+        public const string InvalidProperties = "Properties do not match the sub-category schema specification.";
     }
 }

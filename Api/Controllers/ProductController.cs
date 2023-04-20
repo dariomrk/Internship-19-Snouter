@@ -96,7 +96,7 @@ namespace Api.Controllers
         {
             await _productService.UpdateAvailability(
                 id,
-                Enum.Parse<ProductAvailability>(request.ProductAvailability),
+                Enum.Parse<ProductAvailability>(request.ProductAvailability, true),
                 cancellationToken);
 
             return Ok();

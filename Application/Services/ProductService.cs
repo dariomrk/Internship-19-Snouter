@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Common.Constants;
+using Common.Exceptions;
 using Contracts.Requests;
 using Contracts.Responses;
 using Data.Interfaces;
@@ -14,18 +15,21 @@ namespace Application.Services
         private readonly IRepository<Country, int> _countryRepository;
         private readonly IRepository<County, int> _countyRepository;
         private readonly IJsonSchemaValidationService _jsonSchemaValidationService;
+        private readonly ISubCategoryService _subCategoryService;
 
         public ProductService(
             IRepository<Product, int> productRepository,
             IRepository<City, int> cityRepository,
             IRepository<Country, int> countryRepository,
             IRepository<County, int> countyRepository,
-            IJsonSchemaValidationService jsonSchemaValidationService) : base(productRepository)
+            IJsonSchemaValidationService jsonSchemaValidationService,
+            ISubCategoryService subCategoryService) : base(productRepository)
         {
             _cityRepository = cityRepository;
             _countryRepository = countryRepository;
             _countyRepository = countyRepository;
             _jsonSchemaValidationService = jsonSchemaValidationService;
+            _subCategoryService = subCategoryService;
         }
 
         public async Task<ProductResponse> CreateAsync(
@@ -38,6 +42,14 @@ namespace Application.Services
                 throw new ArgumentNullException(Messages.CityNotDefined);
 
             var mapped = request.ToModel();
+
+            var subCategory = await _subCategoryService.FindAsync(mapped.SubCategoryId, cancellationToken);
+
+            if (subCategory is null)
+                throw new InvalidOperationException();
+
+            if (!_jsonSchemaValidationService.ValidateSchema(mapped.Properties, subCategory.ValidationSchema))
+                throw new JsonValidationException(Messages.InvalidProperties);
 
             var creationResult = await _repository.CreateAsync(mapped, cancellationToken);
 

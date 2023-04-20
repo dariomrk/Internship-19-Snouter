@@ -40,7 +40,7 @@ namespace Contracts.Requests
                     Longitude = dto.Longitude.Value,
                 }
                 : null,
-                State = Enum.Parse<ProductState>(dto.State),
+                State = Enum.Parse<ProductState>(dto.State, true),
                 Availability = ProductAvailability.Available,
                 SubCategoryId = dto.SubCategoryId,
                 Properties = JsonDocument.Parse(dto.Properties.ToString()),

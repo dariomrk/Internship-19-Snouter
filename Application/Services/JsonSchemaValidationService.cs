@@ -6,8 +6,8 @@ public class JsonSchemaValidationService : IJsonSchemaValidationService
 {
     public bool ValidateSchema(JsonDocument toValidate, JsonDocument validationSchema)
     {
-        var schema = JsonSchema.FromText(validationSchema.RootElement.GetString());
-        var validationResult = schema.Evaluate(toValidate.RootElement.GetString());
+        var schema = JsonSchema.FromText(validationSchema.RootElement.GetRawText());
+        var validationResult = schema.Evaluate(toValidate.RootElement.GetRawText());
 
         return validationResult.IsValid;
     }
