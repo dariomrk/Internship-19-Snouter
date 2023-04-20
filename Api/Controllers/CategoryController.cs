@@ -2,7 +2,6 @@
 using Contracts.Requests;
 using Contracts.Responses;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers
 {
@@ -10,12 +9,10 @@ namespace Api.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        private readonly ISubCategoryservice _subCategoryService;
 
-        public CategoryController(ICategoryService categoryService, ISubCategoryservice subCategoryservice)
+        public CategoryController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
-            _subCategoryService = subCategoryservice;
         }
 
         [HttpPost(Routes.Categories.CreateCategory)]
@@ -31,20 +28,6 @@ namespace Api.Controllers
             return Created($"api/categories/{result.Id}/sub-categories", result);
         }
 
-        [HttpPost(Routes.Categories.CreateSubCategory)]
-        public async Task<ActionResult<SubCategoryResponse>> CreateSubCategory(
-            [FromRoute] int categoryId,
-            [FromBody] CreateSubCategoryRequest newSubCategory,
-            CancellationToken cancellationToken)
-        {
-            if (newSubCategory is null)
-                return BadRequest();
-
-            var result = await _subCategoryService.CreateAsync(categoryId, newSubCategory, cancellationToken);
-
-            return Created($"api/categories/{categoryId}/sub-categories/{result.Id}/products", result);
-        }
-
         [HttpGet(Routes.Categories.GetAllCategories)]
         public async Task<ActionResult<ICollection<CategoryResponse>>> GetAllCategories()
         {
@@ -53,27 +36,9 @@ namespace Api.Controllers
             return Ok(result.Select(c => c.ToDto()));
         }
 
-        [HttpGet(Routes.Categories.GetSubCategories)]
-        public async Task<ActionResult<IEnumerable<SubCategoryResponse>>> GetSubCategories(
-            [FromRoute] int categoryId,
-            CancellationToken cancellationToken)
-        {
-            var category = await _categoryService.FindAsync(categoryId, cancellationToken);
-
-            if (category is null)
-                return BadRequest();
-
-            var result = await _subCategoryService
-                .Query()
-                .Where(sc => sc.CategoryId == categoryId)
-                .ToListAsync();
-
-            return Ok(result.Select(sc => sc.ToDto()));
-        }
-
         [HttpPatch(Routes.Categories.UpdateCategoryName)]
         public async Task<ActionResult> UpdateCategoryName(
-            [FromBody] string newName,
+            [FromBody] UpdateNameRequest request,
             [FromRoute] int categoryId,
             CancellationToken cancellationToken = default)
         {
@@ -82,27 +47,24 @@ namespace Api.Controllers
             if (category is null)
                 return BadRequest();
 
-            category.Name = newName;
+            category.Name = request.Name;
 
             await _categoryService.UpdateAsync(category, cancellationToken);
 
             return Accepted();
         }
 
-        [HttpPatch(Routes.Categories.UpdateSubCategoryName)]
-        public async Task<ActionResult> UpdateSubCategoryName(
-            [FromBody] string newName,
-            [FromRoute] int subCategoryId,
+        [HttpDelete(Routes.Categories.DeleteCategory)]
+        public async Task<ActionResult> DeleteCategory(
+            [FromRoute] int categoryId,
             CancellationToken cancellationToken = default)
         {
-            var subCategory = await _subCategoryService.FindAsync(subCategoryId, cancellationToken);
+            var category = await _categoryService.FindAsync(categoryId, cancellationToken);
 
-            if (subCategory is null)
+            if (category is null)
                 return BadRequest();
 
-            subCategory.Name = newName;
-
-            await _subCategoryService.UpdateAsync(subCategory, cancellationToken);
+            await _categoryService.DeleteAsync(categoryId, cancellationToken);
 
             return Accepted();
         }
