@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Contracts.Requests;
 using Contracts.Responses;
+using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -72,6 +73,43 @@ namespace Api.Controllers
             var result = await _productService.GetAllFromSubCategory(subCategoryId, cancellationToken);
 
             return Ok(result);
+        }
+
+        [HttpGet(Routes.Products.FindById)]
+        public async Task<ActionResult<ProductResponse>> FindById(
+            [FromRoute] int id,
+            CancellationToken cancellationToken)
+        {
+            var product = await _productService.FindById(id);
+
+            if (product is null)
+                return NotFound();
+
+            return Ok(product);
+        }
+
+        [HttpPatch(Routes.Products.UpdateAvailability)]
+        public async Task<ActionResult> UpdateAvailability(
+            [FromRoute] int id,
+            [FromBody] UpdateProductAvailabilityRequest request,
+            CancellationToken cancellationToken)
+        {
+            await _productService.UpdateAvailability(
+                id,
+                Enum.Parse<ProductAvailability>(request.ProductAvailability),
+                cancellationToken);
+
+            return Ok();
+        }
+
+        [HttpPatch(Routes.Products.Renew)]
+        public async Task<ActionResult> Renew(
+            [FromRoute] int id,
+            CancellationToken cancellationToken)
+        {
+            await _productService.Renew(id, cancellationToken);
+
+            return Ok();
         }
     }
 }

@@ -6,6 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="JsonSchema.Net" Version="4.0.4" />
+  </ItemGroup>
+
 <ItemGroup>
 	<ProjectReference Include="..\Common\Common.csproj" />
 	<ProjectReference Include="..\Contracts\Contracts.csproj" />

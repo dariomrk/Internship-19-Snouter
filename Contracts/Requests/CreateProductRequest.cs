@@ -14,7 +14,7 @@ namespace Contracts.Requests
         public int CityId { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
-        public ProductState State { get; set; }
+        public string State { get; set; }
         public int SubCategoryId { get; set; }
         public JsonObject Properties { get; set; }
         public int CreatorId { get; set; }
@@ -40,7 +40,7 @@ namespace Contracts.Requests
                     Longitude = dto.Longitude.Value,
                 }
                 : null,
-                State = dto.State,
+                State = Enum.Parse<ProductState>(dto.State),
                 Availability = ProductAvailability.Available,
                 SubCategoryId = dto.SubCategoryId,
                 Properties = JsonDocument.Parse(dto.Properties.ToString()),

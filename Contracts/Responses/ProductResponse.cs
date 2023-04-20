@@ -25,6 +25,7 @@ namespace Contracts.Responses
         public int CreatorId { get; set; }
         public DateTime PublishedAt { get; set; }
         public DateTime RenewedAt { get; set; }
+        public IEnumerable<ImageResponse> Images { get; set; }
     }
 
     public static partial class ContractMappings
@@ -52,6 +53,12 @@ namespace Contracts.Responses
                 ProductState = model.State,
                 RenewedAt = model.RenewedAt,
                 Properties = model.Properties.RootElement,
+                Images = model.Images
+                    .Select(image => new ImageResponse
+                    {
+                        Id = image.Id,
+                        ImageBase64 = image.ImageBase64
+                    }),
             };
         }
     }
