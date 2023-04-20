@@ -28,12 +28,6 @@ namespace Api.Controllers
             [FromBody] CreateProductRequest request,
             CancellationToken cancellationToken)
         {
-
-            var subCategory = await _subCategoryService.FindAsync(request.SubCategoryId, cancellationToken);
-
-            if (subCategory is null)
-                return BadRequest();
-
             var result = await _productService.CreateAsync(request, cancellationToken);
 
             return Created($"/api/products/{result.Id}", result);
@@ -44,11 +38,6 @@ namespace Api.Controllers
             [FromRoute] int categoryId,
             CancellationToken cancellationToken)
         {
-            var category = await _categoryService.FindAsync(categoryId, cancellationToken);
-
-            if (category is null)
-                return BadRequest();
-
             var result = await _productService.GetAllFromCategory(categoryId, cancellationToken);
 
             return Ok(result);
@@ -60,16 +49,6 @@ namespace Api.Controllers
             [FromRoute] int subCategoryId,
             CancellationToken cancellationToken)
         {
-            var category = await _categoryService.FindAsync(categoryId, cancellationToken);
-
-            if (category is null)
-                return BadRequest();
-
-            var subCategory = await _subCategoryService.FindAsync(subCategoryId, cancellationToken);
-
-            if (subCategory is null)
-                return BadRequest();
-
             var result = await _productService.GetAllFromSubCategory(subCategoryId, cancellationToken);
 
             return Ok(result);

@@ -20,7 +20,7 @@ namespace Application.Services
             var creationResult = await _repository.CreateAsync(mapped, cancellationToken);
 
             if (creationResult.RepositoryActionResult is not Data.Enums.RepositoryAction.Success)
-                throw new Exception(Messages.RepositoryActionFailed);
+                throw new InvalidOperationException(Messages.RepositoryActionFailed);
 
             return creationResult.CreatedEntity.ToDto();
         }

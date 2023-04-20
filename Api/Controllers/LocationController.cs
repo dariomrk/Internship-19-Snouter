@@ -24,21 +24,13 @@ namespace Api.Controllers
 
         [HttpPost(Routes.Locations.CreateCity)]
         public async Task<ActionResult<CityResponse>> CreateCity(
-            [FromRoute] int id,
+            [FromRoute] int countyId,
             [FromBody] CreateCityRequest city,
             CancellationToken cancellationToken = default)
         {
-            if (city is null)
-                return BadRequest();
+            var result = await _cityService.CreateAsync(countyId, city);
 
-            var county = await _countyService.FindAsync(id, cancellationToken);
-
-            if (county is null)
-                return BadRequest();
-
-            var result = await _cityService.CreateAsync(county.Id, city);
-
-            return Created($"/api/counties/{county.Id}/cities/{result.Id}", result);
+            return Created($"/api/counties/{countyId}/cities/{result.Id}", result);
         }
 
         [HttpGet(Routes.Locations.GetAll)]

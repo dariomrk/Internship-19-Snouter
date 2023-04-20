@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Common.Constants;
+using Common.Exceptions;
 using Contracts.Requests;
 using Contracts.Responses;
 using Data.Interfaces;
@@ -27,14 +28,14 @@ namespace Application.Services
                 .FindAsync(categoryId, cancellationToken);
 
             if (category is null)
-                throw new ArgumentException(Messages.CategoryInvalid);
+                throw new NotFoundException(Messages.CategoryInvalid);
 
             var mapped = newSubCategoryRequest.ToModel(categoryId);
 
             var creationResult = await _repository.CreateAsync(mapped, cancellationToken);
 
             if (creationResult.RepositoryActionResult is not Data.Enums.RepositoryAction.Success)
-                throw new Exception(Messages.RepositoryActionFailed);
+                throw new InvalidOperationException(Messages.RepositoryActionFailed);
 
             return creationResult.CreatedEntity.ToDto();
         }

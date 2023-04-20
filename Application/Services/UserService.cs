@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Common.Constants;
+using Common.Exceptions;
 using Common.Extensions;
 using Contracts.Requests;
 using Contracts.Responses;
@@ -40,7 +41,7 @@ namespace Application.Services
                     cancellationToken);
 
             if (isInformationInUse)
-                throw new ArgumentException(Messages.IdentityInformationInUse);
+                throw new BadRequestException(Messages.InformationInUse);
 
             try
             {
@@ -72,13 +73,13 @@ namespace Application.Services
             }
             catch (Exception)
             {
-                throw new ArgumentException(Messages.CityNotDefined);
+                throw new BadRequestException(Messages.InvalidCity);
             }
 
             var creationResult = await _repository.CreateAsync(mapped, cancellationToken);
 
             if (creationResult.RepositoryActionResult is not RepositoryAction.Success)
-                throw new Exception(Messages.RepositoryActionFailed);
+                throw new InvalidOperationException(Messages.RepositoryActionFailed);
 
             var createdUser = await _repository
                 .Query()
@@ -126,7 +127,7 @@ namespace Application.Services
             var currentUser = await _repository.FindAsync(id, cancellationToken);
 
             if (currentUser is null)
-                throw new ArgumentException();
+                throw new NotFoundException(Messages.EntityDoesNotExist);
 
             await _repository.BeginTransactionAsync(cancellationToken);
 
@@ -143,7 +144,7 @@ namespace Application.Services
                         cancellationToken);
 
                 if (informationInUse)
-                    throw new ArgumentException(Messages.IdentityInformationInUse);
+                    throw new BadRequestException(Messages.InformationInUse);
 
                 var country = await _countryRepository
                     .Query()
@@ -177,7 +178,7 @@ namespace Application.Services
                 var updateResult = await _repository.UpdateAsync(currentUser, cancellationToken);
 
                 if (updateResult is not RepositoryAction.Success or RepositoryAction.NoChanges)
-                    throw new Exception(Messages.RepositoryActionFailed);
+                    throw new InvalidOperationException(Messages.RepositoryActionFailed);
             }
             catch (Exception)
             {

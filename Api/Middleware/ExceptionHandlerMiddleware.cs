@@ -1,7 +1,7 @@
-﻿using Contracts.Responses;
+﻿using Common.Exceptions;
+using Contracts.Responses;
 using Serilog;
 using System.Net;
-using System.Text.Json;
 
 namespace Api.Middleware
 {
@@ -20,10 +20,18 @@ namespace Api.Middleware
             {
                 await _next(context);
             }
-            catch (Exception exception)
+            catch (Exception e) when (
+                e is NotFoundException
+                or JsonValidationException
+                or BadRequestException)
             {
-                Log.Error(exception, exception.Message);
-                await HandleExceptionAsync(context, exception);
+                Log.Error(e, e.Message);
+                await HandleExceptionAsync(context, e);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e, e.Message);
+                await HandleExceptionAsync(context, e);
             }
         }
 
@@ -35,10 +43,12 @@ namespace Api.Middleware
 
             var statusCode = exception switch
             {
-                JsonException => HttpStatusCode.BadRequest,
-                ArgumentNullException => HttpStatusCode.BadRequest,
-                ArgumentException => HttpStatusCode.BadRequest,
-                InvalidOperationException => HttpStatusCode.BadRequest,
+                NotFoundException => HttpStatusCode.NotFound,
+                JsonValidationException => HttpStatusCode.BadRequest,
+                BadRequestException => HttpStatusCode.BadRequest,
+                ArgumentNullException => HttpStatusCode.InternalServerError,
+                ArgumentException => HttpStatusCode.InternalServerError,
+                InvalidOperationException => HttpStatusCode.InternalServerError,
                 _ => HttpStatusCode.InternalServerError,
             };
 

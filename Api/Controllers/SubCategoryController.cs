@@ -26,9 +26,6 @@ namespace Api.Controllers
                 [FromBody] CreateSubCategoryRequest newSubCategory,
                 CancellationToken cancellationToken)
             {
-                if (newSubCategory is null)
-                    return BadRequest();
-
                 var result = await _subCategoryService.CreateAsync(categoryId, newSubCategory, cancellationToken);
 
                 return Created($"api/categories/{categoryId}/sub-categories/{result.Id}/products", result);
@@ -75,11 +72,6 @@ namespace Api.Controllers
                 [FromRoute] int subCategoryId,
                 CancellationToken cancellationToken = default)
             {
-                var subCategory = await _subCategoryService.FindAsync(subCategoryId, cancellationToken);
-
-                if (subCategory is null)
-                    return BadRequest();
-
                 await _subCategoryService.DeleteAsync(subCategoryId, cancellationToken);
 
                 return Accepted();

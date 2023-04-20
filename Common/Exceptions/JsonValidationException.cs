@@ -1,6 +1,6 @@
 ﻿namespace Common.Exceptions
 {
-    public class JsonValidationException : Exception
+    public class JsonValidationException : BadRequestException
     {
         public JsonValidationException() { }
 

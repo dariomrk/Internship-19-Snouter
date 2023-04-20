@@ -39,14 +39,14 @@ namespace Application.Services
             var city = await _cityRepository.FindAsync(request.CityId, cancellationToken);
 
             if (city is null)
-                throw new ArgumentNullException(Messages.CityNotDefined);
+                throw new BadRequestException(Messages.InvalidCity);
 
             var mapped = request.ToModel();
 
             var subCategory = await _subCategoryService.FindAsync(mapped.SubCategoryId, cancellationToken);
 
             if (subCategory is null)
-                throw new InvalidOperationException();
+                throw new NotFoundException(Messages.EntityDoesNotExist);
 
             if (!_jsonSchemaValidationService.ValidateSchema(mapped.Properties, subCategory.ValidationSchema))
                 throw new JsonValidationException(Messages.InvalidProperties);
@@ -114,7 +114,7 @@ namespace Application.Services
             var product = await _repository.FindAsync(id, cancellationToken);
 
             if (product is null)
-                throw new ArgumentNullException(Messages.EntityDoesNotExist);
+                throw new NotFoundException(Messages.EntityDoesNotExist);
 
             product.Availability = availability;
 
@@ -128,7 +128,7 @@ namespace Application.Services
             var product = await _repository.FindAsync(id, cancellationToken);
 
             if (product is null)
-                throw new ArgumentNullException(Messages.EntityDoesNotExist);
+                throw new NotFoundException(Messages.EntityDoesNotExist);
 
             product.RenewedAt = DateTime.UtcNow;
 
