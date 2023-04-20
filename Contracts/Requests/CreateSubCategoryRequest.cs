@@ -1,22 +1,23 @@
 ﻿using Data.Models;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Contracts.Requests
 {
     public class CreateSubCategoryRequest
     {
         public string Name { get; set; }
-        public JsonDocument ValidationSchema { get; set; }
+        public JsonObject ValidationSchema { get; set; }
     }
 
     public static partial class ContractMappings
     {
-        public static SubCategory ToModel(this CreateSubCategoryRequest request, int categoryId)
+        public static SubCategory ToModel(this CreateSubCategoryRequest model, int categoryId)
         {
             return new SubCategory
             {
-                Name = request.Name,
-                ValidationSchema = request.ValidationSchema,
+                Name = model.Name,
+                ValidationSchema = JsonDocument.Parse(model.ValidationSchema.ToString()),
                 CategoryId = categoryId,
             };
         }
