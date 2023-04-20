@@ -8,6 +8,14 @@ namespace Data.Seeds
         internal static ModelBuilder AddCroatia(this ModelBuilder modelBuilder)
         {
             modelBuilder
+                .Entity<Currency>()
+                .HasData(new Currency
+                {
+                    Id = 1,
+                    Abbreviation = "EUR",
+                });
+
+            modelBuilder
                 .Entity<Country>()
                 .HasData(new Country
                 {

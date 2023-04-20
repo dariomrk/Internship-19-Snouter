@@ -6,6 +6,7 @@ namespace Contracts.Responses
 {
     public class ProductResponse
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Slug { get; set; }
         public string Description { get; set; }
@@ -32,6 +33,7 @@ namespace Contracts.Responses
         {
             return new ProductResponse
             {
+                Id = model.Id,
                 Name = model.Name,
                 Slug = model.Slug,
                 Description = model.Description,
