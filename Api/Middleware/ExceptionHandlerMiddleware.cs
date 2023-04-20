@@ -34,6 +34,7 @@ namespace Api.Middleware
 
             var statusCode = exception switch
             {
+                ArgumentNullException => HttpStatusCode.BadRequest,
                 ArgumentException => HttpStatusCode.BadRequest,
                 InvalidOperationException => HttpStatusCode.BadRequest,
                 _ => HttpStatusCode.InternalServerError,

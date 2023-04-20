@@ -19,7 +19,7 @@ namespace Application.Services
 
         public async Task<CityResponse> CreateAsync(
             int countyId,
-            CreateCityRequest newCityDetails,
+            CreateCityRequest newCityRequest,
             CancellationToken cancellationToken = default)
         {
             var county = await _countyService.FindAsync(countyId, cancellationToken);
@@ -27,7 +27,7 @@ namespace Application.Services
             if (county is null)
                 throw new ArgumentException(Messages.CountyInvalid);
 
-            var mapped = newCityDetails.ToModel(county);
+            var mapped = newCityRequest.ToModel(county);
 
             var creationResult = await _repository.CreateAsync(mapped, cancellationToken);
 

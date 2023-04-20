@@ -28,9 +28,9 @@ namespace Application.Services
             _countryRepository = countryRepository;
         }
 
-        public async Task<UserResponse> CreateAsync(UserRequest newUserDetails, CancellationToken cancellationToken = default)
+        public async Task<UserResponse> CreateAsync(UserRequest newUserRequest, CancellationToken cancellationToken = default)
         {
-            var mapped = newUserDetails.ToModel();
+            var mapped = newUserRequest.ToModel();
 
             var isInformationInUse = await _repository
                 .Query()
@@ -47,7 +47,7 @@ namespace Application.Services
                 var country = await _countryRepository
                     .Query()
                     .AsNoTracking()
-                    .FirstAsync(c => c.Name.ToLower() == newUserDetails.CountryName
+                    .FirstAsync(c => c.Name.ToLower() == newUserRequest.CountryName
                         .Trim()
                         .ToLower()
                         .Normalize());
@@ -55,7 +55,7 @@ namespace Application.Services
                 var county = await _countyRepository
                     .Query()
                     .AsNoTracking()
-                    .FirstAsync(c => c.Name.ToLower() == newUserDetails.CountyName
+                    .FirstAsync(c => c.Name.ToLower() == newUserRequest.CountyName
                         .Trim()
                         .ToLower()
                         .Normalize());
@@ -63,7 +63,7 @@ namespace Application.Services
                 var city = await _cityRepository
                     .Query()
                     .AsNoTracking()
-                    .FirstAsync(c => c.Name.ToLower() == newUserDetails.CityName
+                    .FirstAsync(c => c.Name.ToLower() == newUserRequest.CityName
                         .Trim()
                         .ToLower()
                         .Normalize());
