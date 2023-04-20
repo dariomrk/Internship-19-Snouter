@@ -13,16 +13,19 @@ namespace Application.Services
         private readonly IRepository<City, int> _cityRepository;
         private readonly IRepository<Country, int> _countryRepository;
         private readonly IRepository<County, int> _countyRepository;
+        private readonly IJsonSchemaValidationService _jsonSchemaValidationService;
 
         public ProductService(
             IRepository<Product, int> productRepository,
             IRepository<City, int> cityRepository,
             IRepository<Country, int> countryRepository,
-            IRepository<County, int> countyRepository) : base(productRepository)
+            IRepository<County, int> countyRepository,
+            IJsonSchemaValidationService jsonSchemaValidationService) : base(productRepository)
         {
             _cityRepository = cityRepository;
             _countryRepository = countryRepository;
             _countyRepository = countyRepository;
+            _jsonSchemaValidationService = jsonSchemaValidationService;
         }
 
         public async Task<ProductResponse> CreateAsync(
@@ -44,12 +47,7 @@ namespace Application.Services
             var result = await _repository
                 .Query()
                 .AsNoTracking()
-                .Include(p => p.Currency)
-                .Include(p => p.PreciseLocation)
-                .Include(p => p.City).ThenInclude(p => p.County).ThenInclude(p => p.Country)
-                .Include(p => p.SubCategory).ThenInclude(p => p.Category)
-                .Include(p => p.Creator)
-                .Include(p => p.Images)
+                .IncludeRelated()
                 .FirstAsync(p => p.Id == creationResult.CreatedEntity.Id);
 
             return result.ToDto();
@@ -62,12 +60,7 @@ namespace Application.Services
             var result = await _repository
                 .Query()
                 .AsNoTracking()
-                .Include(p => p.Currency)
-                .Include(p => p.PreciseLocation)
-                .Include(p => p.City).ThenInclude(p => p.County).ThenInclude(p => p.Country)
-                .Include(p => p.SubCategory).ThenInclude(p => p.Category)
-                .Include(p => p.Creator)
-                .Include(p => p.Images)
+                .IncludeRelated()
                 .Where(p => p.SubCategory.Category.Id == categoryId)
                 .Select(p => p.ToDto())
                 .ToListAsync(cancellationToken);
@@ -82,12 +75,7 @@ namespace Application.Services
             var result = await _repository
                 .Query()
                 .AsNoTracking()
-                .Include(p => p.Currency)
-                .Include(p => p.PreciseLocation)
-                .Include(p => p.City).ThenInclude(p => p.County).ThenInclude(p => p.Country)
-                .Include(p => p.SubCategory).ThenInclude(p => p.Category)
-                .Include(p => p.Creator)
-                .Include(p => p.Images)
+                .IncludeRelated()
                 .Where(p => p.SubCategory.Id == subCategoryId)
                 .Select(p => p.ToDto())
                 .ToListAsync(cancellationToken);
@@ -100,12 +88,7 @@ namespace Application.Services
             var result = await _repository
                 .Query()
                 .AsNoTracking()
-                .Include(p => p.Currency)
-                .Include(p => p.PreciseLocation)
-                .Include(p => p.City).ThenInclude(p => p.County).ThenInclude(p => p.Country)
-                .Include(p => p.SubCategory).ThenInclude(p => p.Category)
-                .Include(p => p.Creator)
-                .Include(p => p.Images)
+                .IncludeRelated()
                 .FirstAsync(p => p.Id == id);
 
             return result.ToDto();

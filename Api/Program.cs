@@ -53,6 +53,7 @@ namespace Api
             #endregion
 
             #region Service registration
+            services.AddScoped<IJsonSchemaValidationService, JsonSchemaValidationService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<ICountryService, CountryService>();

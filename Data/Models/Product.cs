@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace Data.Models
 {
@@ -42,5 +43,19 @@ namespace Data.Models
         public ICollection<Image> Images { get; set; } = new List<Image>();
 
         public void Dispose() => Properties?.Dispose();
+    }
+
+    public static partial class EntityExtensions
+    {
+        public static IQueryable<Product> IncludeRelated(this IQueryable<Product> query)
+        {
+            return query
+                .Include(p => p.Currency)
+                .Include(p => p.PreciseLocation)
+                .Include(p => p.City).ThenInclude(p => p.County).ThenInclude(p => p.Country)
+                .Include(p => p.SubCategory).ThenInclude(p => p.Category)
+                .Include(p => p.Creator)
+                .Include(p => p.Images);
+        }
     }
 }
