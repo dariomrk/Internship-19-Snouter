@@ -30,6 +30,20 @@ namespace Api.Controllers
             return Created($"api/categories/{result.Id}/sub-categories", result);
         }
 
+        [HttpPost(Routes.Categories.CreateSubCategory)]
+        public async Task<ActionResult<SubCategoryResponse>> CreateSubCategory(
+            [FromRoute] int categoryId,
+            [FromBody] CreateSubCategoryRequest newSubCategory,
+            CancellationToken cancellationToken)
+        {
+            if (newSubCategory is null)
+                return BadRequest();
+
+            var result = await _subCategoryservice.CreateAsync(categoryId, newSubCategory, cancellationToken);
+
+            return Created($"api/categories/{categoryId}/sub-categories/{result.Id}/products", result);
+        }
+
         [HttpGet(Routes.Categories.GetAllCategories)]
         public async Task<ActionResult<ICollection<CategoryResponse>>> GetAllCategories()
         {

@@ -7,7 +7,9 @@ using Data.Interfaces;
 using Data.Models;
 using Data.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Serilog;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Api
@@ -84,7 +86,14 @@ namespace Api
                 options.UseNpgsql(connectionString));
 
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(config =>
+            {
+                config.MapType<JsonDocument>(() => new OpenApiSchema
+                {
+                    Type = "object",
+                    Format = "json",
+                });
+            });
 
             return services;
         }

@@ -9,12 +9,12 @@ namespace Contracts.Requests
 
     public static partial class ContractMappings
     {
-        public static City ToModel(this CreateCityRequest dto, County county)
+        public static City ToModel(this CreateCityRequest dto, int countyId)
         {
             return new City
             {
                 Name = dto.Name,
-                CountyId = county.Id,
+                CountyId = countyId,
             };
         }
 

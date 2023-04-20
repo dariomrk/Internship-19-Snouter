@@ -11,5 +11,6 @@
         public const string CityNotDefined = "The specified city is not recognized or does not exist in our system.";
         public const string UpdateFailed = "Update failed. No changes have been applied.";
         public const string CountyInvalid = "The provided county is invalid.";
+        public const string CategoryInvalid = "The provided category is invalid.";
     }
 }

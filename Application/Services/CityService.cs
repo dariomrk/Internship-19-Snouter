@@ -27,7 +27,7 @@ namespace Application.Services
             if (county is null)
                 throw new ArgumentException(Messages.CountyInvalid);
 
-            var mapped = newCityRequest.ToModel(county);
+            var mapped = newCityRequest.ToModel(county.Id);
 
             var creationResult = await _repository.CreateAsync(mapped, cancellationToken);
 
