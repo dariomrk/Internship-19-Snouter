@@ -22,7 +22,7 @@ namespace Api.Controllers
             _cityService = cityService;
         }
 
-        [HttpPost(Routes.Location.CreateCity)]
+        [HttpPost(Routes.Locations.CreateCity)]
         public async Task<ActionResult<CityResponse>> CreateCity(
             [FromRoute] int id,
             [FromBody] CreateCityRequest city,
@@ -41,7 +41,7 @@ namespace Api.Controllers
             return Created($"/api/counties/{county.Id}/cities/{result.Id}", result);
         }
 
-        [HttpGet(Routes.Location.GetAll)]
+        [HttpGet(Routes.Locations.GetAll)]
         public async Task<ActionResult<IEnumerable<CountryResponse>>> GetAll(CancellationToken cancellationToken)
         {
             var countries = await _countryService.GetAll();
@@ -49,7 +49,7 @@ namespace Api.Controllers
             return Ok(countries.Select(c => c.ToDto()));
         }
 
-        [HttpGet(Routes.Location.FindCountyById)]
+        [HttpGet(Routes.Locations.FindCountyById)]
         public async Task<ActionResult<CountyResponse>> FindCountyById(
             [FromRoute] int id,
             CancellationToken cancellationToken)
@@ -62,7 +62,7 @@ namespace Api.Controllers
             return Ok(county.ToDto());
         }
 
-        [HttpGet(Routes.Location.FindCountyByName)]
+        [HttpGet(Routes.Locations.FindCountyByName)]
         public async Task<ActionResult<CountyResponse>> FindCountyByName(
             [FromRoute] string name,
             CancellationToken cancellationToken)
@@ -75,7 +75,7 @@ namespace Api.Controllers
             return Ok(county.ToDto());
         }
 
-        [HttpGet(Routes.Location.FindCityById)]
+        [HttpGet(Routes.Locations.FindCityById)]
         public async Task<ActionResult<CityResponse>> FindCityById(
             [FromRoute] int countyId,
             [FromRoute] int cityId,
@@ -94,7 +94,7 @@ namespace Api.Controllers
             return Ok(city.ToDto());
         }
 
-        [HttpDelete(Routes.Location.DeleteCity)]
+        [HttpDelete(Routes.Locations.DeleteCity)]
         public async Task<ActionResult> DeleteCity(
             [FromRoute] int countyId,
             [FromRoute] int cityId,

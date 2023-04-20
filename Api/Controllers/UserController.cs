@@ -15,7 +15,7 @@ namespace Api.Controllers
             _userService = userService;
         }
 
-        [HttpPost(Routes.User.Create)]
+        [HttpPost(Routes.Users.Create)]
         public async Task<ActionResult<UserResponse>> CreateAsync(
             [FromBody] UserRequest request,
             CancellationToken cancellationToken)
@@ -25,7 +25,7 @@ namespace Api.Controllers
             return Created($"/api/users/{result.Id}", result);
         }
 
-        [HttpGet(Routes.User.GetAll)]
+        [HttpGet(Routes.Users.GetAll)]
         public async Task<ActionResult<IEnumerable<UserResponse>>> GetAllAsync()
         {
             var result = await _userService.GetAll();
@@ -33,7 +33,7 @@ namespace Api.Controllers
             return Ok(result.Select(u => u.ToDto()));
         }
 
-        [HttpGet(Routes.User.Find)]
+        [HttpGet(Routes.Users.Find)]
         public async Task<ActionResult<UserResponse>> FindAsync(
             [FromRoute] int id,
             CancellationToken cancellationToken)
@@ -46,7 +46,7 @@ namespace Api.Controllers
             return Ok(result.ToDto());
         }
 
-        [HttpPut(Routes.User.Update)]
+        [HttpPut(Routes.Users.Update)]
         public async Task<ActionResult<UserResponse>> UpdateAsync(
             [FromRoute] int id,
             [FromBody] UserRequest request,
@@ -62,7 +62,7 @@ namespace Api.Controllers
             return Ok(response);
         }
 
-        [HttpDelete(Routes.User.Delete)]
+        [HttpDelete(Routes.Users.Delete)]
         public async Task<ActionResult> DeleteAsync([FromRoute] int id, CancellationToken cancellationToken)
         {
             var result = await _userService.FindAsync(id, cancellationToken);
