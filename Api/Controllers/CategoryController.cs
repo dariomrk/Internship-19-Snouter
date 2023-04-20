@@ -10,12 +10,12 @@ namespace Api.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        private readonly ISubCategoryservice _subCategoryservice;
+        private readonly ISubCategoryservice _subCategoryService;
 
         public CategoryController(ICategoryService categoryService, ISubCategoryservice subCategoryservice)
         {
             _categoryService = categoryService;
-            _subCategoryservice = subCategoryservice;
+            _subCategoryService = subCategoryservice;
         }
 
         [HttpPost(Routes.Categories.CreateCategory)]
@@ -40,7 +40,7 @@ namespace Api.Controllers
             if (newSubCategory is null)
                 return BadRequest();
 
-            var result = await _subCategoryservice.CreateAsync(categoryId, newSubCategory, cancellationToken);
+            var result = await _subCategoryService.CreateAsync(categoryId, newSubCategory, cancellationToken);
 
             return Created($"api/categories/{categoryId}/sub-categories/{result.Id}/products", result);
         }
@@ -63,12 +63,48 @@ namespace Api.Controllers
             if (category is null)
                 return BadRequest();
 
-            var result = await _subCategoryservice
+            var result = await _subCategoryService
                 .Query()
                 .Where(sc => sc.CategoryId == categoryId)
                 .ToListAsync();
 
             return Ok(result.Select(sc => sc.ToDto()));
+        }
+
+        [HttpPatch(Routes.Categories.UpdateCategoryName)]
+        public async Task<ActionResult> UpdateCategoryName(
+            [FromBody] string newName,
+            [FromRoute] int categoryId,
+            CancellationToken cancellationToken = default)
+        {
+            var category = await _categoryService.FindAsync(categoryId, cancellationToken);
+
+            if (category is null)
+                return BadRequest();
+
+            category.Name = newName;
+
+            await _categoryService.UpdateAsync(category, cancellationToken);
+
+            return Accepted();
+        }
+
+        [HttpPatch(Routes.Categories.UpdateSubCategoryName)]
+        public async Task<ActionResult> UpdateSubCategoryName(
+            [FromBody] string newName,
+            [FromRoute] int subCategoryId,
+            CancellationToken cancellationToken = default)
+        {
+            var subCategory = await _subCategoryService.FindAsync(subCategoryId, cancellationToken);
+
+            if (subCategory is null)
+                return BadRequest();
+
+            subCategory.Name = newName;
+
+            await _subCategoryService.UpdateAsync(subCategory, cancellationToken);
+
+            return Accepted();
         }
     }
 }
