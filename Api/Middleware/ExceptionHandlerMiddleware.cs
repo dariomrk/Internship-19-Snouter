@@ -1,6 +1,7 @@
 ﻿using Contracts.Responses;
 using Serilog;
 using System.Net;
+using System.Text.Json;
 
 namespace Api.Middleware
 {
@@ -34,6 +35,7 @@ namespace Api.Middleware
 
             var statusCode = exception switch
             {
+                JsonException => HttpStatusCode.BadRequest,
                 ArgumentNullException => HttpStatusCode.BadRequest,
                 ArgumentException => HttpStatusCode.BadRequest,
                 InvalidOperationException => HttpStatusCode.BadRequest,

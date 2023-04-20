@@ -2,6 +2,7 @@
 using Contracts.Requests;
 using Contracts.Responses;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers
 {
@@ -52,5 +53,22 @@ namespace Api.Controllers
             return Ok(result.Select(c => c.ToDto()));
         }
 
+        [HttpGet(Routes.Categories.GetSubCategories)]
+        public async Task<ActionResult<IEnumerable<SubCategoryResponse>>> GetSubCategories(
+            [FromRoute] int categoryId,
+            CancellationToken cancellationToken)
+        {
+            var category = await _categoryService.FindAsync(categoryId, cancellationToken);
+
+            if (category is null)
+                return BadRequest();
+
+            var result = await _subCategoryservice
+                .Query()
+                .Where(sc => sc.CategoryId == categoryId)
+                .ToListAsync();
+
+            return Ok(result.Select(sc => sc.ToDto()));
+        }
     }
 }
