@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Common.Constants;
+using Common.Extensions;
 using Contracts.Requests;
 using Contracts.Responses;
 using Data.Enums;
@@ -147,29 +148,35 @@ namespace Application.Services
                 var country = await _countryRepository
                     .Query()
                     .AsNoTracking()
-                    .FirstAsync(c => c.Name == mapped.City.County.Country.Name);
+                    .FirstAsync(c => c.Name.ToLower() == updateUserDetails.CountryName.Sanitize());
 
                 var county = await _countyRepository
                     .Query()
                     .AsNoTracking()
-                    .FirstAsync(c => c.Name == mapped.City.County.Name);
+                    .FirstAsync(c => c.Name.ToLower() == updateUserDetails.CountyName.Sanitize());
 
                 var city = await _cityRepository
                     .Query()
                     .AsNoTracking()
-                    .FirstAsync(c => c.Name == mapped.City.Name);
+                    .FirstAsync(c => c.Name.ToLower() == updateUserDetails.CityName.Sanitize());
 
                 currentUser.FirstName = mapped.FirstName;
                 currentUser.LastName = mapped.LastName;
                 currentUser.Email = mapped.Email;
                 currentUser.Phone = mapped.Phone;
                 currentUser.Username = mapped.Username;
-                currentUser.City = mapped.City;
-                currentUser.PreciseLocation = mapped.PreciseLocation;
+                currentUser.CityId = city.Id;
+                currentUser.PreciseLocation = updateUserDetails.Latitude.HasValue && updateUserDetails.Longitude.HasValue
+                    ? new PreciseLocation
+                    {
+                        Latitude = updateUserDetails.Latitude.Value,
+                        Longitude = updateUserDetails.Longitude.Value
+                    }
+                    : null;
 
                 var updateResult = await _repository.UpdateAsync(currentUser, cancellationToken);
 
-                if (updateResult is not RepositoryAction.Success)
+                if (updateResult is not RepositoryAction.Success or RepositoryAction.NoChanges)
                     throw new Exception(Messages.RepositoryActionFailed);
             }
             catch (Exception)

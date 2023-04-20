@@ -55,11 +55,24 @@ namespace Api.Controllers
             var result = await _userService.FindAsync(id, cancellationToken);
 
             if (result is null)
-                return NotFound();
+                return BadRequest();
 
             var response = await _userService.UpdateAsync(id, request, cancellationToken);
 
             return Ok(response);
+        }
+
+        [HttpDelete(Routes.User.Delete)]
+        public async Task<ActionResult> DeleteAsync([FromRoute] int id, CancellationToken cancellationToken)
+        {
+            var result = await _userService.FindAsync(id, cancellationToken);
+
+            if (result is null)
+                return BadRequest();
+
+            await _userService.DeleteAsync(id, cancellationToken);
+
+            return NoContent();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Data.Models;
+﻿using Common.Extensions;
+using Data.Models;
 
 namespace Contracts.Requests
 {
@@ -23,22 +24,17 @@ namespace Contracts.Requests
             return new User
             {
                 FirstName = dto.FirstName
-                    .Trim()
-                    .Normalize(),
+                     .Trim()
+                     .Normalize(),
                 LastName = dto.LastName
                     .Trim()
                     .Normalize(),
                 Username = dto.Username
-                    .Trim()
-                    .ToLower()
-                    .Normalize(),
+                    .Sanitize(),
                 Email = dto.Email
-                    .Trim()
-                    .ToLower()
-                    .Normalize(),
+                    .Sanitize(),
                 Phone = dto.Phone
-                    .Trim()
-                    .Normalize(),
+                    .Sanitize(),
                 PreciseLocation = dto.Latitude.HasValue && dto.Longitude.HasValue
                 ? new PreciseLocation
                 {
