@@ -39,6 +39,7 @@ namespace Data.Models
         public DateTime PublishedAt { get; set; }
         public DateTime RenewedAt { get; set; }
         public bool HasExpired => RenewedAt.AddDays(30) < DateTime.UtcNow;
+        public ICollection<Image> Images { get; set; } = new List<Image>();
 
         public void Dispose() => Properties?.Dispose();
     }

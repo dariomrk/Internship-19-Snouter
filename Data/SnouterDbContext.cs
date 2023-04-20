@@ -22,6 +22,7 @@ namespace Data
                 .ConfigureCountry()
                 .ConfigureCounty()
                 .ConfigureCurrency()
+                .ConfigureImage()
                 .ConfigurePreciseLocation()
                 .ConfigureProduct()
                 .ConfigureSubCategory()

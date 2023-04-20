@@ -61,6 +61,17 @@ namespace Data
 
             return modelBuilder;
         }
+        internal static ModelBuilder ConfigureImage(this ModelBuilder modelBuilder)
+        {
+            var builder = modelBuilder.Entity<Image>();
+
+            builder
+                .Property(x => x.ImageBytes)
+                .IsRequired()
+                .HasColumnType("bytea");
+
+            return modelBuilder;
+        }
         internal static ModelBuilder ConfigurePreciseLocation(this ModelBuilder modelBuilder)
         {
             var builder = modelBuilder.Entity<PreciseLocation>();
