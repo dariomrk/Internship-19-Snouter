@@ -1,4 +1,5 @@
-﻿using Contracts.Responses;
+﻿using Common.Exceptions;
+using Contracts.Responses;
 using FluentValidation;
 using Serilog;
 using System.Net;
@@ -35,6 +36,19 @@ namespace Api.Middleware
 
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 await context.Response.WriteAsJsonAsync(validationFailureResponse);
+            }
+            catch (Exception ex) when (ex
+                is BadRequestException
+                or JsonValidationException
+                or NotFoundException)
+            {
+                Log.Error(ex, ex.Message);
+
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                await context.Response.WriteAsJsonAsync(new
+                {
+                    ex.Message,
+                });
             }
             catch (Exception ex)
             {

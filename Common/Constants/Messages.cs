@@ -14,5 +14,6 @@
         public const string CategoryInvalid = "Invalid category.";
         public const string InvalidProperties = "Product properties do not match the sub-category schema specification.";
         public const string MissingInformation = "The request does not contain the required information.";
+        public const string NameTaken = "The specified name is already in use.";
     }
 }

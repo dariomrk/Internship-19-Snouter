@@ -6,8 +6,10 @@ using Data;
 using Data.Interfaces;
 using Data.Models;
 using Data.Repositories;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace Api
@@ -63,6 +65,7 @@ namespace Api
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ISubCategoryService, SubCategoryService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddValidatorsFromAssembly(Assembly.Load(nameof(Application)));
             #endregion
 
             #region Repository registration

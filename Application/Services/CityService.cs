@@ -5,6 +5,7 @@ using Contracts.Requests;
 using Contracts.Responses;
 using Data.Interfaces;
 using Data.Models;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
@@ -12,11 +13,14 @@ namespace Application.Services
     public class CityService : BaseService<City, int>, ICityService
     {
         private readonly IRepository<County, int> _countyRepository;
+        private readonly IValidator<CreateCityRequest> _createCityRequestValidator;
         public CityService(
             IRepository<City, int> repository,
-            IRepository<County, int> countyRepository) : base(repository)
+            IRepository<County, int> countyRepository,
+            IValidator<CreateCityRequest> createCityRequestValidator) : base(repository)
         {
             _countyRepository = countyRepository;
+            _createCityRequestValidator = createCityRequestValidator;
         }
 
         public async Task<CityResponse> CreateAsync(
@@ -24,6 +28,8 @@ namespace Application.Services
             CreateCityRequest newCityRequest,
             CancellationToken cancellationToken = default)
         {
+            await _createCityRequestValidator.ValidateAndThrowAsync(newCityRequest, cancellationToken);
+
             var county = await _countyRepository.FindAsync(countyId, cancellationToken);
 
             if (county is null)
