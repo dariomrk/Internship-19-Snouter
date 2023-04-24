@@ -4,17 +4,24 @@ using Contracts.Requests;
 using Contracts.Responses;
 using Data.Interfaces;
 using Data.Models;
+using FluentValidation;
 
 namespace Application.Services
 {
     public class CategoryService : BaseService<Category, int>, ICategoryService
     {
-        public CategoryService(IRepository<Category, int> repository) : base(repository) { }
+        private readonly IValidator<CreateCategoryRequest> _createCategoryRequestValidator;
+        public CategoryService(IRepository<Category, int> repository, IValidator<CreateCategoryRequest> categoryValidator) : base(repository)
+        {
+            _createCategoryRequestValidator = categoryValidator;
+        }
 
         public async Task<CategoryResponse> CreateAsync(
             CreateCategoryRequest newCategoryRequest,
             CancellationToken cancellationToken = default)
         {
+            await _createCategoryRequestValidator.ValidateAndThrowAsync(newCategoryRequest, cancellationToken);
+
             var mapped = newCategoryRequest.ToModel();
 
             var creationResult = await _repository.CreateAsync(mapped, cancellationToken);
