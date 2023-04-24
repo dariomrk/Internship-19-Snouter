@@ -1,3 +1,4 @@
+using Api.Constants;
 using Api.Middleware;
 using Application.Interfaces;
 using Application.Services;
@@ -7,9 +8,12 @@ using Data.Interfaces;
 using Data.Models;
 using Data.Repositories;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Reflection;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace Api
@@ -21,7 +25,7 @@ namespace Api
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Host.ConfigureHost();
-            builder.Services.RegisterApplicationServices();
+            builder.Services.RegisterApplicationServices(builder.Configuration);
 
             var app = builder.Build();
 
@@ -43,8 +47,39 @@ namespace Api
 
     public static class ServiceInitializer
     {
-        public static IServiceCollection RegisterApplicationServices(this IServiceCollection services)
+        public static IServiceCollection RegisterApplicationServices(this IServiceCollection services, IConfiguration config)
         {
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(config["Jwt:TokenSecret"]!)),
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = config["Jwt:Issuer"],
+                    ValidAudience = config["Jwt:Audience"],
+                    ValidateIssuer = true,
+                    ValidateAudience = true
+                };
+            });
+
+            services.AddAuthorization(x =>
+            {
+                x.AddPolicy(AuthConstants.AdminUserPolicyName,
+                    p => p.RequireClaim(AuthConstants.AdminUserClaimName, "true"));
+
+                x.AddPolicy(AuthConstants.UserPolicyName,
+                    p => p.RequireAssertion(c =>
+                        c.User.HasClaim(m => m is { Type: AuthConstants.AdminUserClaimName, Value: "true" }) ||
+                        c.User.HasClaim(m => m is { Type: AuthConstants.UserClaimName, Value: "true" })));
+            });
+
             #region Controller registration
             services.AddControllers()
                 .AddJsonOptions(options =>
@@ -104,12 +139,12 @@ namespace Api
                 app.UseSwaggerUI();
             }
 
-            app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.MapControllers();
 
             return app;

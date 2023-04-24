@@ -23,7 +23,7 @@ namespace Api.Controllers
             CancellationToken cancellationToken)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_configuration.GetValue<string>("TokenSecret")!);
+            var key = Encoding.UTF8.GetBytes(_configuration.GetValue<string>("Jwt:TokenSecret")!);
 
             var claims = new List<Claim>
             {
@@ -51,9 +51,9 @@ namespace Api.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(_configuration.GetValue<int>("TokenLifetimeHours")!),
-                Issuer = "https://snouter/api/identity",
-                Audience = "https://snouter/api",
+                Expires = DateTime.UtcNow.AddHours(_configuration.GetValue<int>("Jwt:TokenLifetimeHours")!),
+                Issuer = _configuration.GetValue<string>("Jwt:Issuer")!,
+                Audience = _configuration.GetValue<string>("Jwt:Audience")!,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 

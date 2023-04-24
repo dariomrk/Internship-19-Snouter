@@ -1,7 +1,9 @@
-﻿using Application.Interfaces;
+﻿using Api.Constants;
+using Application.Interfaces;
 using Contracts.Requests;
 using Contracts.Responses;
 using Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -23,6 +25,7 @@ namespace Api.Controllers
             _subCategoryService = subCategoryService;
         }
 
+        [Authorize(AuthConstants.UserPolicyName)]
         [HttpPost(Routes.Products.Create)]
         public async Task<ActionResult<ProductResponse>> Create(
             [FromBody] CreateProductRequest request,
@@ -67,6 +70,7 @@ namespace Api.Controllers
             return Ok(product);
         }
 
+        [Authorize(AuthConstants.UserPolicyName)]
         [HttpPatch(Routes.Products.UpdateAvailability)]
         public async Task<ActionResult> UpdateAvailability(
             [FromRoute] int id,
@@ -81,6 +85,7 @@ namespace Api.Controllers
             return Ok();
         }
 
+        [Authorize(AuthConstants.UserPolicyName)]
         [HttpPatch(Routes.Products.Renew)]
         public async Task<ActionResult> Renew(
             [FromRoute] int id,
@@ -91,6 +96,7 @@ namespace Api.Controllers
             return Ok();
         }
 
+        [Authorize(AuthConstants.UserPolicyName)]
         [HttpDelete(Routes.Products.Delete)]
         public async Task<ActionResult> Delete(
             [FromRoute] int id,

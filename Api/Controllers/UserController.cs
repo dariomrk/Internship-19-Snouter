@@ -1,6 +1,8 @@
-﻿using Application.Interfaces;
+﻿using Api.Constants;
+using Application.Interfaces;
 using Contracts.Requests;
 using Contracts.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -46,6 +48,7 @@ namespace Api.Controllers
             return Ok(result.ToDto());
         }
 
+        [Authorize(AuthConstants.UserPolicyName)]
         [HttpPut(Routes.Users.Update)]
         public async Task<ActionResult<UserResponse>> UpdateAsync(
             [FromRoute] int id,
@@ -57,6 +60,7 @@ namespace Api.Controllers
             return Ok(response);
         }
 
+        [Authorize(AuthConstants.AdminUserPolicyName)]
         [HttpDelete(Routes.Users.Delete)]
         public async Task<ActionResult> DeleteAsync([FromRoute] int id, CancellationToken cancellationToken)
         {
