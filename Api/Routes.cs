@@ -55,5 +55,12 @@
             public const string Renew = $"{ControllerBase}/{{id:int}}/renew";
             public const string Delete = $"{ControllerBase}/{{id:int}}";
         }
+
+        public static class Identity
+        {
+            private const string ControllerBase = $"{ApiBase}/identity";
+
+            public const string GetJwt = $"{ControllerBase}";
+        }
     }
 }
