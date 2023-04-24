@@ -7,6 +7,7 @@ using Contracts.Responses;
 using Data.Enums;
 using Data.Interfaces;
 using Data.Models;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
@@ -16,21 +17,25 @@ namespace Application.Services
         private readonly IRepository<City, int> _cityRepository;
         private readonly IRepository<County, int> _countyRepository;
         private readonly IRepository<Country, int> _countryRepository;
+        private readonly IValidator<UserRequest> _userRequestValidator;
 
         public UserService(
             IRepository<User, int> userRepository,
             IRepository<City, int> cityRepository,
             IRepository<County, int> countyRepository,
-            IRepository<Country, int> countryRepository
-            ) : base(userRepository)
+            IRepository<Country, int> countryRepository,
+            IValidator<UserRequest> userRequestValidator) : base(userRepository)
         {
             _cityRepository = cityRepository;
             _countyRepository = countyRepository;
             _countryRepository = countryRepository;
+            _userRequestValidator = userRequestValidator;
         }
 
         public async Task<UserResponse> CreateAsync(UserRequest newUserRequest, CancellationToken cancellationToken = default)
         {
+            _userRequestValidator.ValidateAndThrowAsync(newUserRequest, cancellationToken);
+
             var mapped = newUserRequest.ToModel();
 
             var isInformationInUse = await _repository
@@ -118,6 +123,7 @@ namespace Application.Services
 
         public async Task<UserResponse> UpdateAsync(int id, UserRequest updateUserDetails, CancellationToken cancellationToken = default)
         {
+            _userRequestValidator.ValidateAndThrowAsync(updateUserDetails, cancellationToken);
 
             var currentUser = await _repository.FindAsync(id, cancellationToken);
 
