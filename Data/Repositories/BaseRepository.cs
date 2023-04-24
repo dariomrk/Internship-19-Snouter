@@ -39,7 +39,7 @@ namespace Data.Repositories
             }
             catch (Exception e)
             {
-                Log.Error(Messages.CaughtException, e);
+                Log.Error(e, e.Message);
                 return RepositoryAction.Error;
             }
         }
@@ -51,7 +51,7 @@ namespace Data.Repositories
             }
             catch (Exception e)
             {
-                Log.Error(Messages.CaughtException, e);
+                Log.Error(e, e.Message);
                 return RepositoryAction.Error;
             }
         }
