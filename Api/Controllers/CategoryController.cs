@@ -17,6 +17,7 @@ namespace Api.Controllers
             _categoryService = categoryService;
         }
 
+        [Authorize(AuthConstants.AdminUserPolicyName)]
         [HttpPost(Routes.Categories.CreateCategory)]
         public async Task<ActionResult<CategoryResponse>> CreateCategory(
             [FromBody] CreateCategoryRequest newCategory,
