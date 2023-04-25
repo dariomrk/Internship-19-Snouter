@@ -1,6 +1,8 @@
-﻿using Application.Interfaces;
+﻿using Api.Constants;
+using Application.Interfaces;
 using Contracts.Requests;
 using Contracts.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -15,6 +17,7 @@ namespace Api.Controllers
             _categoryService = categoryService;
         }
 
+        [Authorize(AuthConstants.AdminUserPolicyName)]
         [HttpPost(Routes.Categories.CreateCategory)]
         public async Task<ActionResult<CategoryResponse>> CreateCategory(
             [FromBody] CreateCategoryRequest newCategory,
@@ -33,6 +36,7 @@ namespace Api.Controllers
             return Ok(result.Select(c => c.ToDto()));
         }
 
+        [Authorize(AuthConstants.AdminUserPolicyName)]
         [HttpPatch(Routes.Categories.UpdateCategoryName)]
         public async Task<ActionResult> UpdateCategoryName(
             [FromBody] UpdateNameRequest request,
@@ -51,6 +55,7 @@ namespace Api.Controllers
             return Accepted();
         }
 
+        [Authorize(AuthConstants.AdminUserPolicyName)]
         [HttpDelete(Routes.Categories.DeleteCategory)]
         public async Task<ActionResult> DeleteCategory(
             [FromRoute] int categoryId,

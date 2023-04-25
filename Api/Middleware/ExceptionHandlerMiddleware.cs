@@ -1,5 +1,6 @@
 ﻿using Common.Exceptions;
 using Contracts.Responses;
+using FluentValidation;
 using Serilog;
 using System.Net;
 
@@ -20,46 +21,45 @@ namespace Api.Middleware
             {
                 await _next(context);
             }
-            catch (Exception e) when (
-                e is NotFoundException
+            catch (ValidationException ex)
+            {
+                Log.Error(ex, ex.Message);
+
+                var validationFailureResponse = new ValidationFailureResponse
+                {
+                    ValidationErrors = ex.Errors.Select(e => new ValidationFailureResponse.ValidationResponse
+                    {
+                        PropertyName = e.PropertyName,
+                        Message = e.ErrorMessage,
+                    })
+                };
+
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                await context.Response.WriteAsJsonAsync(validationFailureResponse);
+            }
+            catch (Exception ex) when (ex
+                is BadRequestException
                 or JsonValidationException
-                or BadRequestException)
+                or NotFoundException)
             {
-                Log.Error(e, e.Message);
-                await HandleExceptionAsync(context, e);
+                Log.Error(ex, ex.Message);
+
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                await context.Response.WriteAsJsonAsync(new
+                {
+                    ex.Message,
+                });
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Log.Fatal(e, e.Message);
-                await HandleExceptionAsync(context, e);
+                Log.Fatal(ex, ex.Message);
+
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                await context.Response.WriteAsJsonAsync(new
+                {
+                    ex.Message,
+                });
             }
-        }
-
-        private static async Task HandleExceptionAsync(
-            HttpContext context,
-            Exception exception,
-            CancellationToken cancellationToken = default)
-        {
-
-            var statusCode = exception switch
-            {
-                NotFoundException => HttpStatusCode.NotFound,
-                JsonValidationException => HttpStatusCode.BadRequest,
-                BadRequestException => HttpStatusCode.BadRequest,
-                ArgumentNullException => HttpStatusCode.InternalServerError,
-                ArgumentException => HttpStatusCode.InternalServerError,
-                InvalidOperationException => HttpStatusCode.InternalServerError,
-                _ => HttpStatusCode.InternalServerError,
-            };
-
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)statusCode;
-            await context.Response.WriteAsJsonAsync(new ExceptionResponse
-            {
-                StatusCode = statusCode,
-                Message = exception.Message,
-            }, cancellationToken);
-
         }
     }
 }

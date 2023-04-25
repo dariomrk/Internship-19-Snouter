@@ -5,6 +5,7 @@ using Contracts.Requests;
 using Contracts.Responses;
 using Data.Interfaces;
 using Data.Models;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
@@ -16,6 +17,7 @@ namespace Application.Services
         private readonly IRepository<County, int> _countyRepository;
         private readonly IJsonSchemaValidationService _jsonSchemaValidationService;
         private readonly ISubCategoryService _subCategoryService;
+        private readonly IValidator<CreateProductRequest> _createProductRequestValidator;
 
         public ProductService(
             IRepository<Product, int> productRepository,
@@ -23,19 +25,23 @@ namespace Application.Services
             IRepository<Country, int> countryRepository,
             IRepository<County, int> countyRepository,
             IJsonSchemaValidationService jsonSchemaValidationService,
-            ISubCategoryService subCategoryService) : base(productRepository)
+            ISubCategoryService subCategoryService,
+            IValidator<CreateProductRequest> createProductRequestValidator) : base(productRepository)
         {
             _cityRepository = cityRepository;
             _countryRepository = countryRepository;
             _countyRepository = countyRepository;
             _jsonSchemaValidationService = jsonSchemaValidationService;
             _subCategoryService = subCategoryService;
+            _createProductRequestValidator = createProductRequestValidator;
         }
 
         public async Task<ProductResponse> CreateAsync(
             CreateProductRequest request,
             CancellationToken cancellationToken = default)
         {
+            await _createProductRequestValidator.ValidateAndThrowAsync(request, cancellationToken);
+
             var city = await _cityRepository.FindAsync(request.CityId, cancellationToken);
 
             if (city is null)

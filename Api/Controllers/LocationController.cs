@@ -1,6 +1,8 @@
-﻿using Application.Interfaces;
+﻿using Api.Constants;
+using Application.Interfaces;
 using Contracts.Requests;
 using Contracts.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -22,6 +24,7 @@ namespace Api.Controllers
             _cityService = cityService;
         }
 
+        [Authorize(AuthConstants.AdminUserPolicyName)]
         [HttpPost(Routes.Locations.CreateCity)]
         public async Task<ActionResult<CityResponse>> CreateCity(
             [FromRoute] int countyId,
@@ -86,6 +89,7 @@ namespace Api.Controllers
             return Ok(city.ToDto());
         }
 
+        [Authorize(AuthConstants.AdminUserPolicyName)]
         [HttpPatch(Routes.Locations.UpdateCityName)]
         public async Task<ActionResult> UpdateCityName(
             [FromRoute] int countyId,
@@ -108,6 +112,7 @@ namespace Api.Controllers
             return Accepted();
         }
 
+        [Authorize(AuthConstants.AdminUserPolicyName)]
         [HttpDelete(Routes.Locations.DeleteCity)]
         public async Task<ActionResult> DeleteCity(
             [FromRoute] int countyId,
